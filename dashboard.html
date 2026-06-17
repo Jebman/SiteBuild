@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Software Factory</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0d0d0b;
+    --bg2:#141412;
+    --bg3:#1a1a17;
+    --bg4:#222220;
+    --border:rgba(255,255,255,0.08);
+    --border2:rgba(255,255,255,0.12);
+    --text:#e8e6de;
+    --muted:#7a7870;
+    --muted2:#5a5850;
+    --orange:#e8621a;
+    --green:#39d98a;
+    --red:#e84040;
+    --mono:'Courier New',monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);}
+  body{display:flex;flex-direction:column;min-height:100vh;}
+
+  /* ── Sidebar ── */
+  .sidebar{
+    position:fixed;top:0;left:0;width:160px;height:100vh;
+    background:var(--bg2);border-right:1px solid var(--border);
+    display:flex;flex-direction:column;padding:16px 0;z-index:10;
+  }
+  .sidebar-back{
+    display:flex;align-items:center;gap:8px;padding:8px 16px;
+    font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:16px;
+    border:none;background:none;
+  }
+  .sidebar-back svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;}
+  .sidebar-nav{display:flex;flex-direction:column;gap:2px;padding:0 8px;}
+  .sidebar-item{
+    display:flex;align-items:center;gap:10px;padding:8px 10px;
+    font-size:12px;border-radius:6px;cursor:pointer;color:var(--muted);
+    transition:background 0.15s,color 0.15s;
+  }
+  .sidebar-item.active{background:var(--bg3);color:var(--text);}
+  .sidebar-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+
+  /* ── Main ── */
+  .main{margin-left:160px;display:flex;flex-direction:column;min-height:100vh;}
+
+  /* ── Top bar ── */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 20px;border-bottom:1px solid var(--border);
+    background:var(--bg);position:sticky;top:0;z-index:5;
+  }
+  .factory-title{
+    font-size:11px;letter-spacing:0.14em;color:var(--muted);
+    border:1px solid var(--border2);padding:5px 14px;border-radius:4px;
+  }
+  .topbar-right{display:flex;align-items:center;gap:10px;}
+  .live-badge{
+    display:flex;align-items:center;gap:6px;font-size:11px;
+    color:var(--orange);letter-spacing:0.06em;
+    border:1px solid rgba(232,98,26,0.3);padding:4px 12px;border-radius:4px;
+  }
+  .live-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);animation:pulse 1.5s ease infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+  .time-select{
+    background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+    font-size:11px;padding:4px 10px;border-radius:4px;cursor:pointer;
+  }
+
+  /* ── Content ── */
+  .content{padding:16px 20px;flex:1;}
+
+  /* ── Signal bar ── */
+  .signal-bar{
+    display:grid;
+    grid-template-columns:180px repeat(6,1fr) 180px;
+    gap:0;border:1px solid var(--border);border-radius:6px;
+    overflow:hidden;margin-bottom:16px;background:var(--bg2);
+  }
+  .signal-card{
+    padding:12px 14px;border-right:1px solid var(--border);
+    display:flex;flex-direction:column;gap:6px;position:relative;
+  }
+  .signal-card:last-child{border-right:none;}
+  .signal-label{font-size:9px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;}
+  .signal-num{font-size:9px;color:var(--orange);}
+  .signal-automations{font-size:9px;color:var(--muted2);}
+  .signal-stat{display:flex;justify-content:space-between;font-size:9px;}
+  .signal-stat-label{color:var(--muted);}
+  .signal-stat-val{color:var(--text);}
+  .signal-big{font-size:36px;font-weight:300;line-height:1;color:var(--text);margin-top:auto;}
+  .signal-sub{font-size:9px;color:var(--muted);}
+  .signal-sparkline{margin-top:4px;}
+  .signal-radar{width:60px;height:60px;margin:4px auto;}
+
+  /* ── Metric grid ── */
+  .metric-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  }
+  .metric-card{
+    background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+    padding:16px 18px;position:relative;overflow:hidden;
+  }
+  .metric-header{
+    display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;
+  }
+  .metric-label{font-size:10px;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;}
+  .metric-badge{
+    font-size:9px;letter-spacing:0.08em;color:var(--muted);
+    border:1px solid var(--border);padding:2px 8px;border-radius:3px;
+  }
+  .metric-number{
+    display:flex;align-items:baseline;gap:6px;margin-bottom:2px;
+  }
+  .metric-big{font-size:52px;font-weight:300;line-height:1;letter-spacing:-0.02em;}
+  .metric-unit{font-size:12px;color:var(--muted);letter-spacing:0.06em;align-self:flex-end;padding-bottom:8px;}
+  .metric-change{
+    display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:12px;
+  }
+  .up{color:var(--green);}
+  .down{color:var(--red);}
+  .metric-change-label{color:var(--muted);font-size:10px;}
+  .chart-area{position:relative;height:120px;margin-top:4px;}
+  .chart-footer{
+    display:flex;justify-content:space-between;margin-top:6px;
+    font-size:9px;color:var(--muted);letter-spacing:0.06em;
+  }
+  .chart-footer-note{display:flex;align-items:center;gap:4px;}
+  .dot{width:5px;height:5px;border-radius:50%;}
+
+  /* Time axis labels */
+  .time-labels{
+    display:flex;justify-content:space-between;
+    font-size:9px;color:var(--muted2);margin-top:4px;
+    font-family:var(--mono);
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <button class="sidebar-back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to app
+  </button>
+  <nav class="sidebar-nav">
+    <div class="sidebar-item active">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Software Factory
+    </div>
+    <div class="sidebar-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M2 12h4M18 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      Automations
+    </div>
+  </nav>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="factory-title">YOUR SOFTWARE FACTORY</div>
+    <div class="topbar-right">
+      <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+      <select class="time-select">
+        <option>7d</option><option>30d</option><option>90d</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- Signal pipeline bar -->
+    <div class="signal-bar">
+      <!-- SIGNAL (radar) -->
+      <div class="signal-card">
+        <div class="signal-label">SIGNAL</div>
+        <canvas class="signal-radar" id="radar" width="60" height="60"></canvas>
+        <div class="signal-big">215</div>
+        <div class="signal-sub">● 15 INPUT SOURCES</div>
+      </div>
+
+      <!-- 1 TRIAGE -->
+      <div class="signal-card">
+        <div><span class="signal-num">1</span></div>
+        <div class="signal-label">TRIAGE</div>
+        <div class="signal-automations">4 automations</div>
+        <div class="signal-stat"><span class="signal-stat-label">THROUGHPUT</span><span class="signal-stat-val">38 / day</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">BACKLOG</span><span class="signal-stat-val">12</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">CYCLE TIME</span><span class="signal-stat-val">2m 18s</span></div>
+        <canvas class="signal-sparkline" id="sp1" width="120" height="30"></canvas>
+      </div>
+
+      <!-- 2 CODE GEN -->
+      <div class="signal-card">
+        <div><span class="signal-num">2</span></div>
+        <div class="signal-label">CODE GEN</div>
+        <div class="signal-automations">18 automations</div>
+        <div class="signal-stat"><span class="signal-stat-label">LINES OF CODE</span><span class="signal-stat-val">57k / day</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">PRS IN REVIEW</span><span class="signal-stat-val">28</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">CYCLE TIME</span><span class="signal-stat-val">22h 12m</span></div>
+        <canvas class="signal-sparkline" id="sp2" width="120" height="30"></canvas>
+      </div>
+
+      <!-- 3 VALIDATE -->
+      <div class="signal-card">
+        <div><span class="signal-num">3</span></div>
+        <div class="signal-label">VALIDATE</div>
+        <div class="signal-automations">11 automations</div>
+        <div class="signal-stat"><span class="signal-stat-label"># OF PRS</span><span class="signal-stat-val">38 / day</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">PASS RATE</span><span class="signal-stat-val">98.7%</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">CYCLE TIME</span><span class="signal-stat-val">4m 12s</span></div>
+        <canvas class="signal-sparkline" id="sp3" width="120" height="30"></canvas>
+      </div>
+
+      <!-- 4 RELEASE -->
+      <div class="signal-card">
+        <div><span class="signal-num">4</span></div>
+        <div class="signal-label">RELEASE</div>
+        <div class="signal-automations">5 automations</div>
+        <div class="signal-stat"><span class="signal-stat-label">DEPLOYMENTS</span><span class="signal-stat-val">8 / week</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">PASS RATE</span><span class="signal-stat-val">98.9%</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">CYCLE TIME</span><span class="signal-stat-val">23h 59m</span></div>
+        <canvas class="signal-sparkline" id="sp4" width="120" height="30"></canvas>
+      </div>
+
+      <!-- 5 DOCUMENT -->
+      <div class="signal-card">
+        <div><span class="signal-num">5</span></div>
+        <div class="signal-label">DOCUMENT</div>
+        <div class="signal-automations">2 automations</div>
+        <div class="signal-stat"><span class="signal-stat-label"># OF DOCS</span><span class="signal-stat-val">15 / week</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">PAGE COUNT</span><span class="signal-stat-val">49 / week</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">CYCLE TIME</span><span class="signal-stat-val">3m 44s</span></div>
+        <canvas class="signal-sparkline" id="sp5" width="120" height="30"></canvas>
+      </div>
+
+      <!-- 6 MONITOR -->
+      <div class="signal-card">
+        <div><span class="signal-num">6</span></div>
+        <div class="signal-label">MONITOR</div>
+        <div class="signal-automations">5 automations</div>
+        <div class="signal-stat"><span class="signal-stat-label">INCIDENTS</span><span class="signal-stat-val">4 / day</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">TOKEN EFFICIENCY</span><span class="signal-stat-val">95.1%</span></div>
+        <div class="signal-stat"><span class="signal-stat-label">MTTR</span><span class="signal-stat-val">21m 25s</span></div>
+        <canvas class="signal-sparkline" id="sp6" width="120" height="30"></canvas>
+      </div>
+
+      <!-- DEPLOY (right) -->
+      <div class="signal-card">
+        <div class="signal-label">DEPLOY</div>
+        <canvas class="signal-radar" id="radar2" width="60" height="60"></canvas>
+        <div class="signal-big">159</div>
+        <div class="signal-sub">● 12 KPIS MONITORED</div>
+      </div>
+    </div>
+
+    <!-- 4 metric cards -->
+    <div class="metric-grid">
+
+      <!-- TICKETS TRIAGED -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-label">TICKETS TRIAGED</div>
+          <div class="metric-badge">QUEUE BURN</div>
+        </div>
+        <div class="metric-number">
+          <span class="metric-big" style="color:#e8e6de;">92</span>
+          <span class="metric-unit">TIX</span>
+        </div>
+        <div class="metric-change">
+          <span class="up">▲ 8300%</span>
+          <span class="metric-change-label">This week</span>
+        </div>
+        <div class="chart-area">
+          <canvas id="chart1" style="width:100%;height:100%;"></canvas>
+        </div>
+        <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+        <div class="chart-footer">
+          <div class="chart-footer-note"><span class="dot" style="background:var(--green)"></span>PEAK AT 04:20 UTC</div>
+          <div>BASELINE +71</div>
+        </div>
+      </div>
+
+      <!-- PR VALIDATIONS -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-label">PR VALIDATIONS</div>
+          <div class="metric-badge">MERGE GATE</div>
+        </div>
+        <div class="metric-number">
+          <span class="metric-big" style="color:#e8e6de;">1,339</span>
+          <span class="metric-unit">CHK</span>
+        </div>
+        <div class="metric-change">
+          <span class="down">▼ -37%</span>
+          <span class="metric-change-label">This week</span>
+        </div>
+        <div class="chart-area">
+          <canvas id="chart2" style="width:100%;height:100%;"></canvas>
+        </div>
+        <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+        <div class="chart-footer">
+          <div class="chart-footer-note"><span class="dot" style="background:var(--orange)"></span>VALIDATION LOAD EASING</div>
+          <div>1.2K CHECKS</div>
+        </div>
+      </div>
+
+      <!-- PRS MERGED -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-label">PRS MERGED</div>
+          <div class="metric-badge">SHIP RATE</div>
+        </div>
+        <div class="metric-number">
+          <span class="metric-big" style="color:#e8e6de;">176</span>
+          <span class="metric-unit">PRS</span>
+        </div>
+        <div class="metric-change">
+          <span class="down">▼ -43%</span>
+          <span class="metric-change-label">This week</span>
+        </div>
+        <div class="chart-area">
+          <canvas id="chart3" style="width:100%;height:100%;"></canvas>
+        </div>
+        <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+        <div class="chart-footer">
+          <div class="chart-footer-note"><span class="dot" style="background:var(--orange)"></span>MERGE VELOCITY DOWN</div>
+          <div>AVG 25/DAY</div>
+        </div>
+      </div>
+
+      <!-- INCIDENTS PROCESSED -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-label">INCIDENTS PROCESSED</div>
+          <div class="metric-badge">RELIABILITY</div>
+        </div>
+        <div class="metric-number">
+          <span class="metric-big" style="color:#e8e6de;">47</span>
+          <span class="metric-unit">INC</span>
+        </div>
+        <div class="metric-change">
+          <span class="down">▼ -18%</span>
+          <span class="metric-change-label">This week</span>
+        </div>
+        <div class="chart-area">
+          <canvas id="chart4" style="width:100%;height:100%;"></canvas>
+        </div>
+        <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+        <div class="chart-footer">
+          <div class="chart-footer-note"><span class="dot" style="background:var(--green)"></span>SYSTEM STABLE</div>
+          <div>P1: 3 OPEN</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Draw sparklines (signal bar) ──
+function sparkline(id, color, data) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = max - min || 1;
+  ctx.clearRect(0, 0, W, H);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = (i / (data.length - 1)) * W;
+    const y = H - ((v - min) / range) * (H - 4) - 2;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
+
+const wave = [5,8,12,9,14,11,16,13,10,15,12,8,11,14,9];
+const wave2 = [14,12,10,13,9,11,8,10,13,11,9,12,10,8,11];
+sparkline('sp1', '#e8621a', wave);
+sparkline('sp2', '#39d98a', wave2);
+sparkline('sp3', '#e8621a', [8,10,14,12,16,11,9,13,15,10,12,14,11,9,13]);
+sparkline('sp4', '#39d98a', [12,10,8,11,9,13,10,12,15,11,9,12,10,13,11]);
+sparkline('sp5', '#e8621a', [6,9,11,8,12,10,14,11,9,12,10,8,11,13,10]);
+sparkline('sp6', '#39d98a', [10,12,9,11,13,10,8,11,9,12,10,13,11,9,12]);
+
+// ── Draw radar ──
+function radar(id, color) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 30, cy = 30, r = 24;
+  ctx.clearRect(0, 0, 60, 60);
+  // rings
+  [0.3, 0.55, 0.8, 1].forEach(f => {
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * f, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+  // lines
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+    ctx.stroke();
+  }
+  // filled shape
+  const vals = [0.7, 0.5, 0.8, 0.6, 0.9, 0.65];
+  ctx.fillStyle = color + '33';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  vals.forEach((v, i) => {
+    const a = (i / vals.length) * Math.PI * 2 - Math.PI / 2;
+    const px = cx + Math.cos(a) * r * v;
+    const py = cy + Math.sin(a) * r * v;
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  });
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+}
+
+radar('radar', '#e8621a');
+radar('radar2', '#e8621a');
+
+// ── Draw metric charts ──
+function metricChart(id, data, color, fill) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width || 400;
+  canvas.height = 120;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const min = 0, max = Math.max(...data) * 1.1;
+  const range = max - min || 1;
+  const pad = 2;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 0.5;
+  [0.25, 0.5, 0.75].forEach(f => {
+    const y = H - f * H;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  });
+
+  // fill
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, color + '44');
+  grad.addColorStop(1, color + '00');
+
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = pad + (i / (data.length - 1)) * (W - pad * 2);
+    const y = H - ((v - min) / range) * (H - pad * 2) - pad;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  // close for fill
+  ctx.lineTo(W - pad, H);
+  ctx.lineTo(pad, H);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // line
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = pad + (i / (data.length - 1)) * (W - pad * 2);
+    const y = H - ((v - min) / range) * (H - pad * 2) - pad;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+}
+
+// Sample data for each chart
+const ticketsData = [2,3,4,3,6,10,18,35,52,68,80,75,60,42,28,18,12,8,6,4,3];
+const prData = [80,90,110,100,130,120,150,140,160,145,130,110,95,80,70,60,55,50,48,45,42];
+const mergeData = [30,28,32,35,38,40,42,44,40,36,30,24,20,18,15,12,10,9,8,7,6];
+const incData = [8,6,9,7,5,8,6,4,5,7,6,5,4,6,5,4,3,4,3,4,3];
+
+setTimeout(() => {
+  metricChart('chart1', ticketsData, '#39d98a');
+  metricChart('chart2', prData, '#e8621a');
+  metricChart('chart3', mergeData, '#e8621a');
+  metricChart('chart4', incData, '#39d98a');
+}, 100);
+
+window.addEventListener('resize', () => {
+  metricChart('chart1', ticketsData, '#39d98a');
+  metricChart('chart2', prData, '#e8621a');
+  metricChart('chart3', mergeData, '#e8621a');
+  metricChart('chart4', incData, '#39d98a');
+});
+</script>
+</body>
+</html>
