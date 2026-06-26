@@ -1,0 +1,99 @@
+.main {
+  margin-left: 160px;
+  display: flex; flex-direction: column;
+  min-height: 100vh; width: calc(100% - 160px);
+}
+
+/* Topbar: sticky header across the top of main */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px; border-bottom: 1px solid var(--border);
+  background: var(--bg); position: sticky; top: 0; z-index: 5;
+}
+.page-title {
+  font-size: 11px; letter-spacing: 0.14em; color: var(--muted);
+  border: 1px solid var(--border2); padding: 5px 14px; border-radius: 4px;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.date-badge { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.day-select {
+  background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text); font-size: 11px; padding: 4px 10px;
+  border-radius: 4px; cursor: pointer;
+}
+
+/* Content area: padding + flex column for pills → cards */
+.content { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+/* -------------------------------------------------
+   2c. PAGE COMPONENTS — pills, cards, exercise rows
+------------------------------------------------- */
+
+/* Type pills row (Push / Pull / Legs...) */
+.type-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.type-pill {
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  border: 1px solid var(--border); padding: 4px 12px; border-radius: 20px;
+  color: var(--muted); cursor: pointer; transition: all 0.15s;
+}
+.type-pill.active {
+  border-color: var(--orange); color: var(--orange);
+  background: rgba(232,98,26,0.08);
+}
+.type-label { font-size:9px; letter-spacing:0.1em; color:var(--muted2); text-transform:uppercase; margin-right:4px; }
+
+/* Two-column card grid */
+.cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+
+/* Base card shell */
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 6px; display: flex; flex-direction: column; overflow: hidden;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+.card-title  { font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+.card-badge  { font-size:9px; letter-spacing:0.08em; color:var(--muted); border:1px solid var(--border); padding:2px 8px; border-radius:3px; }
+.card-body   { flex:1; padding:0; overflow:hidden; }
+
+/* Routine card — meta strip + exercise rows */
+.routine-meta { display:flex; gap:20px; padding:14px 18px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.routine-meta-item { display:flex; flex-direction:column; gap:3px; }
+.routine-meta-label { font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); }
+.routine-meta-val { font-size:13px; color:var(--text); }
+.routine-meta-val span { color:var(--orange); }
+
+.exercise-list { display:flex; flex-direction:column; }
+.exercise-row {
+  display: grid; grid-template-columns: 28px 1fr auto auto;
+  align-items: center; gap: 12px;
+  padding: 11px 18px; border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+.exercise-row:last-child { border-bottom: none; }
+.exercise-row:hover { background: var(--bg3); }
+.ex-num    { font-size:10px; color:var(--muted2); font-family:var(--mono); }
+.ex-name   { font-size:13px; color:var(--text); }
+.ex-muscle { font-size:10px; color:var(--muted); margin-top:2px; }
+.ex-sets   { font-size:11px; color:var(--muted); font-family:var(--mono); text-align:right; white-space:nowrap; }
+.ex-vol    { font-size:10px; color:var(--muted2); font-family:var(--mono); text-align:right; white-space:nowrap; min-width:52px; }
+.ex-vol span { color:var(--green); font-size:9px; }
+.set-dots  { display:flex; gap:3px; margin-top:4px; justify-content:flex-end; }
+.set-dot   { width:5px; height:5px; border-radius:50%; background:var(--bg4); border:1px solid var(--border2); }
+.set-dot.done { background:var(--orange); border-color:var(--orange); }
+
+/* Load card — stat strip + body diagram */
+.load-body  { display:flex; flex-direction:column; height:100%; }
+.load-stats { display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid var(--border); }
+.load-stat  { padding:14px 18px; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:3px; }
+.load-stat:last-child { border-right:none; }
+.load-stat-label { font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); }
+.load-stat-val   { font-size:20px; font-weight:300; color:var(--text); }
+.load-stat-unit  { font-size:9px; color:var(--muted); font-family:var(--mono); }
+.body-diagram-area { flex:1; display:flex; align-items:center; justify-content:center; padding:20px; position:relative; }
+.body-legend { position:absolute; right:18px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:8px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:9px; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; }
+.legend-swatch { width:10px; height:10px; border-radius:2px; }
+

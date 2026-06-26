@@ -1,0 +1,30 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0d0d0b;
+  --bg2:     #141412;
+  --bg3:     #1a1a17;
+  --bg4:     #222220;
+  --border:  rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.12);
+  --text:    #e8e6de;
+  --muted:   #7a7870;
+  --muted2:  #5a5850;
+  --orange:  #e8621a;
+  --green:   #39d98a;
+  --red:     #e84040;
+  --mono:    'Courier New', monospace;
+  --sans:    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+}
+body { animation: pageFadeIn 0.2s ease; }
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,208 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Health Dashboard</title>
-<style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#0d0d0b;
-    --bg2:#141412;
-    --bg3:#1a1a17;
-    --bg4:#222220;
-    --border:rgba(255,255,255,0.08);
-    --border2:rgba(255,255,255,0.12);
-    --text:#e8e6de;
-    --muted:#7a7870;
-    --muted2:#5a5850;
-    --orange:#e8621a;
-    --green:#39d98a;
-    --red:#e84040;
-    --blue:#4a9eff;
-    --purple:#a78bfa;
-    --mono:'Courier New',monospace;
-    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  }
-  html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);}
-  body{display:flex;flex-direction:column;min-height:100vh;}
-
-  /* ── Sidebar ── */
-  .sidebar{
-    position:fixed;top:0;left:0;width:160px;height:100vh;
-    background:var(--bg2);border-right:1px solid var(--border);
-    display:flex;flex-direction:column;padding:16px 0;z-index:10;
-  }
-  .sidebar-back{
-    display:flex;align-items:center;gap:8px;padding:8px 16px;
-    font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:16px;
-    border:none;background:none;text-decoration:none;
-    transition:color 0.15s;
-  }
-  .sidebar-back:hover{color:var(--text);}
-  .sidebar-back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
-  .sidebar-nav{display:flex;flex-direction:column;gap:2px;padding:0 8px;}
-  .sidebar-item{
-    display:flex;align-items:center;gap:10px;padding:8px 10px;
-    font-size:12px;border-radius:6px;cursor:pointer;color:var(--muted);
-    transition:background 0.15s,color 0.15s;text-decoration:none;
-  }
-  .sidebar-item:hover{background:var(--bg3);color:var(--text);}
-  .sidebar-item.active{background:var(--bg3);color:var(--text);}
-  .sidebar-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
-
-  /* ── Main ── */
-  .main{margin-left:160px;display:flex;flex-direction:column;min-height:100vh;}
-
-  /* ── Top bar ── */
-  .topbar{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:12px 20px;border-bottom:1px solid var(--border);
-    background:var(--bg);position:sticky;top:0;z-index:5;
-  }
-  .dash-title{
-    font-size:11px;letter-spacing:0.14em;color:var(--muted);
-    border:1px solid var(--border2);padding:5px 14px;border-radius:4px;
-    font-family:var(--mono);
-  }
-  .topbar-right{display:flex;align-items:center;gap:10px;}
-  .live-badge{
-    display:flex;align-items:center;gap:6px;font-size:11px;
-    color:var(--green);letter-spacing:0.06em;
-    border:1px solid rgba(57,217,138,0.3);padding:4px 12px;border-radius:4px;
-  }
-  .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s ease infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-  .time-select{
-    background:var(--bg3);border:1px solid var(--border2);color:var(--text);
-    font-size:11px;padding:4px 10px;border-radius:4px;cursor:pointer;
-    font-family:var(--mono);
-  }
-
-  /* ── Content ── */
-  .content{padding:16px 20px;flex:1;}
-
-  /* ── Signal bar (pipeline) ── */
-  .signal-bar{
-    display:grid;
-    grid-template-columns:180px repeat(6,1fr) 180px;
-    gap:0;border:1px solid var(--border);border-radius:6px;
-    overflow:hidden;margin-bottom:16px;background:var(--bg2);
-  }
-  .signal-card{
-    padding:12px 14px;border-right:1px solid var(--border);
-    display:flex;flex-direction:column;gap:6px;position:relative;
-  }
-  .signal-card:last-child{border-right:none;}
-  .signal-label{font-size:9px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;font-family:var(--mono);}
-  .signal-num{font-size:9px;color:var(--orange);font-family:var(--mono);}
-  .signal-sub-label{font-size:9px;color:var(--muted2);font-family:var(--mono);}
-  .signal-stat{display:flex;justify-content:space-between;font-size:9px;font-family:var(--mono);}
-  .signal-stat-label{color:var(--muted);}
-  .signal-stat-val{color:var(--text);}
-  .signal-big{font-size:36px;font-weight:300;line-height:1;color:var(--text);margin-top:auto;}
-  .signal-sub{font-size:9px;color:var(--muted);font-family:var(--mono);}
-  .signal-sparkline{margin-top:4px;}
-  .signal-radar{width:60px;height:60px;margin:4px auto;}
-
-  /* ── Metric grid ── */
-  .metric-grid{
-    display:grid;grid-template-columns:1fr 1fr;gap:12px;
-  }
-  .metric-card{
-    background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-    padding:16px 18px;position:relative;overflow:hidden;
-  }
-  .metric-header{
-    display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;
-  }
-  .metric-label{font-size:10px;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;font-family:var(--mono);}
-  .metric-badge{
-    font-size:9px;letter-spacing:0.08em;color:var(--muted);
-    border:1px solid var(--border);padding:2px 8px;border-radius:3px;font-family:var(--mono);
-  }
-  .metric-number{
-    display:flex;align-items:baseline;gap:6px;margin-bottom:2px;
-  }
-  .metric-big{font-size:52px;font-weight:300;line-height:1;letter-spacing:-0.02em;}
-  .metric-unit{font-size:12px;color:var(--muted);letter-spacing:0.06em;align-self:flex-end;padding-bottom:8px;font-family:var(--mono);}
-  .metric-change{
-    display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:12px;font-family:var(--mono);
-  }
-  .up{color:var(--green);}
-  .down{color:var(--red);}
-  .neutral{color:var(--muted);}
-  .metric-change-label{color:var(--muted);font-size:10px;}
-  .chart-area{position:relative;height:120px;margin-top:4px;}
-  .chart-footer{
-    display:flex;justify-content:space-between;margin-top:6px;
-    font-size:9px;color:var(--muted);letter-spacing:0.06em;font-family:var(--mono);
-  }
-  .chart-footer-note{display:flex;align-items:center;gap:4px;}
-  .dot{width:5px;height:5px;border-radius:50%;}
-
-  /* Time axis labels */
-  .time-labels{
-    display:flex;justify-content:space-between;
-    font-size:9px;color:var(--muted2);margin-top:4px;
-    font-family:var(--mono);
-  }
-
-  /* ── Zone bar (for cardiovascular) ── */
-  .zone-bar{display:flex;gap:2px;margin-top:6px;border-radius:3px;overflow:hidden;}
-  .zone-seg{height:6px;border-radius:2px;}
-</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Health Dashboard</title>
+  <link rel="stylesheet" href="css/dashboard.css"/>
+  <link rel="stylesheet" href="css/sidebar.css"/>
 </head>
 <body>
 
-<!-- Sidebar -->
-<aside class="sidebar">
-  <a class="sidebar-back" href="index.html">
-    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    Back
-  </a>
-  <nav class="sidebar-nav">
-    <a class="sidebar-item active" href="dashboard.html">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Overview
-    </a>
-    <a class="sidebar-item" href="summary.html">
-      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Summary
-    </a>
-    <a class="sidebar-item" href="workouts.html">
-      <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-      Workouts
-    </a>
-    <a class="sidebar-item" href="history.html">
-      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      History
-    </a>
-    <a class="sidebar-item" href="settings.html">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      Settings
-    </a>
-  </nav>
-</aside>
+<!-- ── Sidebar ── -->
+<aside id="sidebar" class="sidebar"></aside>
 
-<!-- Main -->
+<!-- ── Main ── -->
 <div class="main">
-  <!-- Top bar -->
+
   <header class="topbar">
     <div class="dash-title">HEALTH DASHBOARD</div>
     <div class="topbar-right">
       <div class="live-badge"><span class="live-dot"></span>SYNCED</div>
       <select class="time-select">
-        <option>7d</option><option>30d</option><option>90d</option>
+        <option>7d</option>
+        <option>30d</option>
+        <option>90d</option>
       </select>
     </div>
   </header>
 
   <div class="content">
+
     <!-- Health pipeline bar -->
     <div class="signal-bar">
 
-      <!-- READINESS SCORE (radar) -->
       <div class="signal-card">
         <div class="signal-label">READINESS SCORE</div>
         <canvas class="signal-radar" id="radar" width="60" height="60"></canvas>
@@ -210,7 +39,6 @@
         <div class="signal-sub">● 8 HEALTH SOURCES</div>
       </div>
 
-      <!-- 1 SLEEP -->
       <div class="signal-card">
         <div><span class="signal-num">1</span></div>
         <div class="signal-label">SLEEP</div>
@@ -221,7 +49,6 @@
         <canvas class="signal-sparkline" id="sp1" width="120" height="30"></canvas>
       </div>
 
-      <!-- 2 RECOVERY -->
       <div class="signal-card">
         <div><span class="signal-num">2</span></div>
         <div class="signal-label">RECOVERY</div>
@@ -232,7 +59,6 @@
         <canvas class="signal-sparkline" id="sp2" width="120" height="30"></canvas>
       </div>
 
-      <!-- 3 ACTIVITY -->
       <div class="signal-card">
         <div><span class="signal-num">3</span></div>
         <div class="signal-label">ACTIVITY</div>
@@ -243,7 +69,6 @@
         <canvas class="signal-sparkline" id="sp3" width="120" height="30"></canvas>
       </div>
 
-      <!-- 4 NUTRITION -->
       <div class="signal-card">
         <div><span class="signal-num">4</span></div>
         <div class="signal-label">NUTRITION</div>
@@ -254,7 +79,6 @@
         <canvas class="signal-sparkline" id="sp4" width="120" height="30"></canvas>
       </div>
 
-      <!-- 5 STRESS -->
       <div class="signal-card">
         <div><span class="signal-num">5</span></div>
         <div class="signal-label">STRESS</div>
@@ -265,7 +89,6 @@
         <canvas class="signal-sparkline" id="sp5" width="120" height="30"></canvas>
       </div>
 
-      <!-- 6 CARDIOVASCULAR -->
       <div class="signal-card">
         <div><span class="signal-num">6</span></div>
         <div class="signal-label">CARDIOVASCULAR</div>
@@ -276,7 +99,6 @@
         <canvas class="signal-sparkline" id="sp6" width="120" height="30"></canvas>
       </div>
 
-      <!-- OVERALL HEALTH (summary) -->
       <div class="signal-card">
         <div class="signal-label">OVERALL HEALTH</div>
         <canvas class="signal-radar" id="radar2" width="60" height="60"></canvas>
@@ -284,12 +106,11 @@
         <div class="signal-sub">↑ 14-DAY STREAK</div>
       </div>
 
-    </div>
+    </div><!-- /signal-bar -->
 
     <!-- Metric cards -->
     <div class="metric-grid">
 
-      <!-- HRV -->
       <div class="metric-card">
         <div class="metric-header">
           <div class="metric-label">HEART RATE VARIABILITY</div>
@@ -303,9 +124,7 @@
           <span class="up">▲ +8%</span>
           <span class="metric-change-label">This week</span>
         </div>
-        <div class="chart-area">
-          <canvas id="chart1" style="width:100%;height:100%;"></canvas>
-        </div>
+        <div class="chart-area"><canvas id="chart1" style="width:100%;height:100%;"></canvas></div>
         <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
         <div class="chart-footer">
           <div class="chart-footer-note"><span class="dot" style="background:var(--green)"></span>HRV TRENDING UP</div>
@@ -313,7 +132,6 @@
         </div>
       </div>
 
-      <!-- SLEEP QUALITY -->
       <div class="metric-card">
         <div class="metric-header">
           <div class="metric-label">SLEEP QUALITY</div>
@@ -327,9 +145,7 @@
           <span class="down">▼ -3%</span>
           <span class="metric-change-label">This week</span>
         </div>
-        <div class="chart-area">
-          <canvas id="chart2" style="width:100%;height:100%;"></canvas>
-        </div>
+        <div class="chart-area"><canvas id="chart2" style="width:100%;height:100%;"></canvas></div>
         <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
         <div class="chart-footer">
           <div class="chart-footer-note"><span class="dot" style="background:var(--blue)"></span>SLIGHT DIP LAST 3 NIGHTS</div>
@@ -337,7 +153,6 @@
         </div>
       </div>
 
-      <!-- DAILY STEPS -->
       <div class="metric-card">
         <div class="metric-header">
           <div class="metric-label">DAILY STEPS</div>
@@ -351,9 +166,7 @@
           <span class="up">▲ +12%</span>
           <span class="metric-change-label">This week</span>
         </div>
-        <div class="chart-area">
-          <canvas id="chart3" style="width:100%;height:100%;"></canvas>
-        </div>
+        <div class="chart-area"><canvas id="chart3" style="width:100%;height:100%;"></canvas></div>
         <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
         <div class="chart-footer">
           <div class="chart-footer-note"><span class="dot" style="background:var(--orange)"></span>ABOVE WEEKLY GOAL</div>
@@ -361,7 +174,6 @@
         </div>
       </div>
 
-      <!-- BODY BATTERY -->
       <div class="metric-card">
         <div class="metric-header">
           <div class="metric-label">BODY BATTERY</div>
@@ -375,9 +187,7 @@
           <span class="up">▲ +5%</span>
           <span class="metric-change-label">This week</span>
         </div>
-        <div class="chart-area">
-          <canvas id="chart4" style="width:100%;height:100%;"></canvas>
-        </div>
+        <div class="chart-area"><canvas id="chart4" style="width:100%;height:100%;"></canvas></div>
         <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
         <div class="chart-footer">
           <div class="chart-footer-note"><span class="dot" style="background:var(--purple)"></span>RECHARGING WELL</div>
@@ -385,154 +195,11 @@
         </div>
       </div>
 
-    </div>
-  </div>
-</div>
+    </div><!-- /metric-grid -->
+  </div><!-- /content -->
+</div><!-- /main -->
 
-<script>
-// ── Sparklines ──
-function sparkline(id, color, data) {
-  const canvas = document.getElementById(id);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  const min = Math.min(...data), max = Math.max(...data);
-  const range = max - min || 1;
-  ctx.clearRect(0, 0, W, H);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  ctx.lineJoin = 'round';
-  ctx.beginPath();
-  data.forEach((v, i) => {
-    const x = (i / (data.length - 1)) * W;
-    const y = H - ((v - min) / range) * (H - 4) - 2;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-}
-
-// Sleep quality trend
-sparkline('sp1', '#4a9eff', [82,79,85,88,83,80,84,86,84,82,79,81,84,82,84]);
-// HRV / recovery
-sparkline('sp2', '#39d98a', [44,47,46,50,48,51,49,52,51,50,53,51,52,54,52]);
-// Activity / steps
-sparkline('sp3', '#e8621a', [7200,8100,6800,9200,8400,7600,9800,8200,8900,7400,10200,8600,9100,8000,8432]);
-// Nutrition calories
-sparkline('sp4', '#a78bfa', [2200,1980,2350,2100,2280,1920,2400,2150,2080,2310,2190,2020,2280,2100,2140]);
-// Stress score (lower = better)
-sparkline('sp5', '#39d98a', [35,42,30,28,45,38,25,32,28,35,30,26,28,30,28]);
-// Cardiovascular / HR
-sparkline('sp6', '#4a9eff', [58,57,59,56,58,55,57,56,55,57,56,55,56,57,56]);
-
-// ── Radar chart ──
-function radar(id, vals, color) {
-  const canvas = document.getElementById(id);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const cx = 30, cy = 30, r = 24;
-  ctx.clearRect(0, 0, 60, 60);
-  [0.3, 0.55, 0.8, 1].forEach(f => {
-    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
-    ctx.lineWidth = 0.5;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * f, 0, Math.PI * 2);
-    ctx.stroke();
-  });
-  for (let i = 0; i < 6; i++) {
-    const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
-    ctx.strokeStyle = 'rgba(255,255,255,0.07)';
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-    ctx.stroke();
-  }
-  ctx.fillStyle = color + '33';
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  vals.forEach((v, i) => {
-    const a = (i / vals.length) * Math.PI * 2 - Math.PI / 2;
-    const px = cx + Math.cos(a) * r * v;
-    const py = cy + Math.sin(a) * r * v;
-    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
-  });
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-}
-
-// Readiness: sleep, recovery, activity, nutrition, stress(inv), cardio
-radar('radar',  [0.84, 0.73, 0.70, 0.65, 0.72, 0.80], '#e8621a');
-// Overall health composite
-radar('radar2', [0.84, 0.73, 0.80, 0.75, 0.82, 0.80], '#39d98a');
-
-// ── Metric area charts ──
-function metricChart(id, data, color) {
-  const canvas = document.getElementById(id);
-  if (!canvas) return;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width = rect.width || 400;
-  canvas.height = 120;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  const min = Math.min(...data) * 0.9, max = Math.max(...data) * 1.05;
-  const range = max - min || 1;
-  const pad = 2;
-
-  ctx.clearRect(0, 0, W, H);
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-  ctx.lineWidth = 0.5;
-  [0.25, 0.5, 0.75].forEach(f => {
-    const y = H - f * H;
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-  });
-
-  const grad = ctx.createLinearGradient(0, 0, 0, H);
-  grad.addColorStop(0, color + '44');
-  grad.addColorStop(1, color + '00');
-
-  ctx.beginPath();
-  data.forEach((v, i) => {
-    const x = pad + (i / (data.length - 1)) * (W - pad * 2);
-    const y = H - ((v - min) / range) * (H - pad * 2) - pad;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.lineTo(W - pad, H); ctx.lineTo(pad, H);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  ctx.beginPath();
-  data.forEach((v, i) => {
-    const x = pad + (i / (data.length - 1)) * (W - pad * 2);
-    const y = H - ((v - min) / range) * (H - pad * 2) - pad;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.lineJoin = 'round';
-  ctx.stroke();
-}
-
-const hrvData   = [40,42,44,41,45,43,46,44,47,45,48,46,49,50,48,50,51,49,52,51,52];
-const sleepData = [78,82,80,85,83,81,84,86,82,80,79,83,85,82,84,81,83,85,82,84,84];
-const stepsData = [6200,7800,8100,6400,9200,8600,7200,10100,8400,7600,9800,8200,8900,7400,10200,8600,9100,8200,8800,8100,8432];
-const battData  = [55,58,52,60,56,48,62,58,54,60,57,52,64,60,56,62,58,55,62,60,62];
-
-setTimeout(() => {
-  metricChart('chart1', hrvData,   '#39d98a');
-  metricChart('chart2', sleepData, '#4a9eff');
-  metricChart('chart3', stepsData, '#e8621a');
-  metricChart('chart4', battData,  '#a78bfa');
-}, 100);
-
-window.addEventListener('resize', () => {
-  metricChart('chart1', hrvData,   '#39d98a');
-  metricChart('chart2', sleepData, '#4a9eff');
-  metricChart('chart3', stepsData, '#e8621a');
-  metricChart('chart4', battData,  '#a78bfa');
-});
-</script>
+<script src="js/dashboard.js"></script>
+<script src="js/sidebar.js"></script>
 </body>
 </html>

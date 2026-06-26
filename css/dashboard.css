@@ -1,0 +1,113 @@
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0d0d0b;
+  --bg2:#141412;
+  --bg3:#1a1a17;
+  --bg4:#222220;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.12);
+  --text:#e8e6de;
+  --muted:#7a7870;
+  --muted2:#5a5850;
+  --orange:#e8621a;
+  --green:#39d98a;
+  --red:#e84040;
+  --blue:#4a9eff;
+  --purple:#a78bfa;
+  --mono:'Courier New',monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);}
+body{display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── Main ── */
+.main{margin-left:160px;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── Top bar ── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;border-bottom:1px solid var(--border);
+  background:var(--bg);position:sticky;top:0;z-index:5;
+}
+.dash-title{
+  font-size:11px;letter-spacing:0.14em;color:var(--muted);
+  border:1px solid var(--border2);padding:5px 14px;border-radius:4px;
+  font-family:var(--mono);
+}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.live-badge{
+  display:flex;align-items:center;gap:6px;font-size:11px;
+  color:var(--green);letter-spacing:0.06em;
+  border:1px solid rgba(57,217,138,0.3);padding:4px 12px;border-radius:4px;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.time-select{
+  background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+  font-size:11px;padding:4px 10px;border-radius:4px;cursor:pointer;
+  font-family:var(--mono);
+}
+
+/* ── Content ── */
+.content{padding:16px 20px;flex:1;}
+
+/* ── Signal bar ── */
+.signal-bar{
+  display:grid;
+  grid-template-columns:180px repeat(6,1fr) 180px;
+  gap:0;border:1px solid var(--border);border-radius:6px;
+  overflow:hidden;margin-bottom:16px;background:var(--bg2);
+}
+.signal-card{
+  padding:12px 14px;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:6px;position:relative;
+}
+.signal-card:last-child{border-right:none;}
+.signal-label{font-size:9px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;font-family:var(--mono);}
+.signal-num{font-size:9px;color:var(--orange);font-family:var(--mono);}
+.signal-sub-label{font-size:9px;color:var(--muted2);font-family:var(--mono);}
+.signal-stat{display:flex;justify-content:space-between;font-size:9px;font-family:var(--mono);}
+.signal-stat-label{color:var(--muted);}
+.signal-stat-val{color:var(--text);}
+.signal-big{font-size:36px;font-weight:300;line-height:1;color:var(--text);margin-top:auto;}
+.signal-sub{font-size:9px;color:var(--muted);font-family:var(--mono);}
+.signal-sparkline{margin-top:4px;}
+.signal-radar{width:60px;height:60px;margin:4px auto;}
+
+/* ── Metric grid ── */
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.metric-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+  padding:16px 18px;position:relative;overflow:hidden;
+}
+.metric-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.metric-label{font-size:10px;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;font-family:var(--mono);}
+.metric-badge{
+  font-size:9px;letter-spacing:0.08em;color:var(--muted);
+  border:1px solid var(--border);padding:2px 8px;border-radius:3px;font-family:var(--mono);
+}
+.metric-number{display:flex;align-items:baseline;gap:6px;margin-bottom:2px;}
+.metric-big{font-size:52px;font-weight:300;line-height:1;letter-spacing:-0.02em;}
+.metric-unit{font-size:12px;color:var(--muted);letter-spacing:0.06em;align-self:flex-end;padding-bottom:8px;font-family:var(--mono);}
+.metric-change{display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:12px;font-family:var(--mono);}
+.up{color:var(--green);}
+.down{color:var(--red);}
+.neutral{color:var(--muted);}
+.metric-change-label{color:var(--muted);font-size:10px;}
+.chart-area{position:relative;height:120px;margin-top:4px;}
+.chart-footer{
+  display:flex;justify-content:space-between;margin-top:6px;
+  font-size:9px;color:var(--muted);letter-spacing:0.06em;font-family:var(--mono);
+}
+.chart-footer-note{display:flex;align-items:center;gap:4px;}
+.dot{width:5px;height:5px;border-radius:50%;}
+.time-labels{
+  display:flex;justify-content:space-between;
+  font-size:9px;color:var(--muted2);margin-top:4px;font-family:var(--mono);
+}
+
+/* ── Zone bar ── */
+.zone-bar{display:flex;gap:2px;margin-top:6px;border-radius:3px;overflow:hidden;}
+.zone-seg{height:6px;border-radius:2px;}
