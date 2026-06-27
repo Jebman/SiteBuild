@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calendar</title>
+
+  <!-- Google Identity Services for OAuth -->
+  <script src="https://accounts.google.com/gsi/client"></script>
+
+  <link rel="stylesheet" href="css/sidebar.css"/>
+  <link rel="stylesheet" href="css/dashboard.css"/>
+  <link rel="stylesheet" href="css/calendar.css"/>
+</head>
+<body>
+  <aside id="sidebar" class="sidebar"></aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="page-title">CALENDAR</div>
+      <div class="topbar-right">
+        <button class="topbar-btn" onclick="shiftWeek(-1)">&#8592;</button>
+        <span class="week-label" id="weekLabel"></span>
+        <button class="topbar-btn" onclick="shiftWeek(1)">&#8594;</button>
+        <button class="topbar-btn" onclick="goToday()">Today</button>
+        <button class="topbar-btn connect-btn" id="connectBtn" onclick="signInWithGoogle()">Connect</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="calendar-area">
+        <div class="day-headers" id="dayHeaders"></div>
+        <div class="week-grid" id="weekGrid"></div>
+      </div>
+
+      <div class="side-panel" id="sidePanel">
+        <div class="panel-inner" id="panelInner"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar.js"></script>
+  <script src="js/calendar.js"></script>
+</body>
+</html>
