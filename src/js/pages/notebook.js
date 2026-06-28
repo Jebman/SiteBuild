@@ -1,10 +1,3 @@
-// ────────────────────────────────────────
-//  STATE
-// ────────────────────────────────────────
-let books = [];
-let nextId = 1;
-
-const STORAGE_KEY = 'kg_library_books';
 
 // ────────────────────────────────────────
 //  DOM refs
@@ -49,60 +42,6 @@ toggle.addEventListener('click', () => {
     toggle.textContent = dark ? 'light' : 'dark';
     localStorage.setItem('theme', dark ? 'dark' : 'light');
 });
-
-// ────────────────────────────────────────
-//  STORAGE
-// ────────────────────────────────────────
-function loadBooks() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length) {
-                books = parsed;
-                nextId = Math.max(...books.map(b => b.id || 0), 0) + 1;
-                return;
-            }
-        }
-    } catch (_) { /* ignore */ }
-    // Seed with a couple of example books
-    books = [{
-        id: 1,
-        title: 'The Great Gatsby',
-        author: 'F. Scott Fitzgerald',
-        cover: '',
-        rating: 4,
-        status: 'completed',
-        notes: 'A classic about the American Dream.',
-        dateAdded: Date.now() - 86400000 * 30
-    }, {
-        id: 2,
-        title: 'Atomic Habits',
-        author: 'James Clear',
-        cover: '',
-        rating: 5,
-        status: 'reading',
-        notes: 'Tiny changes, remarkable results.',
-        dateAdded: Date.now() - 86400000 * 5
-    }, {
-        id: 3,
-        title: 'The Alchemist',
-        author: 'Paulo Coelho',
-        cover: '',
-        rating: 3,
-        status: 'want-to-read',
-        notes: '',
-        dateAdded: Date.now() - 86400000 * 2
-    }];
-    nextId = 4;
-    saveBooks();
-}
-
-function saveBooks() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
-    render();
-}
-
 // ────────────────────────────────────────
 //  RENDER
 // ────────────────────────────────────────
@@ -239,6 +178,11 @@ function escHtml(str) {
     return div.innerHTML;
 }
 
+function deleteBook(id) {
+    books = books.filter(b => b.id !== id);
+    saveBooks();  // store.js
+    render();     // notebook.js
+}
 // ────────────────────────────────────────
 //  MODAL
 // ────────────────────────────────────────
@@ -303,27 +247,15 @@ bookForm.addEventListener('submit', (e) => {
     const notes = bookNotes.value.trim() || '';
 
     if (id) {
-        // Edit existing
         const idx = books.findIndex(b => b.id === id);
-        if (idx !== -1) {
-            books[idx] = { ...books[idx], title, author, cover, rating, status, notes };
-        }
+        if (idx !== -1) books[idx] = { ...books[idx], title, author, cover, rating, status, notes };
     } else {
-        // Add new
-        books.push({
-            id: nextId++,
-            title,
-            author,
-            cover,
-            rating,
-            status,
-            notes,
-            dateAdded: Date.now()
-        });
+        books.push({ id: nextId++, title, author, cover, rating, status, notes, dateAdded: Date.now() });
     }
 
-    saveBooks();
+    saveBooks();  // from store.js
     closeModal();
+    render();     // from notebook.js
 });
 
 // ────────────────────────────────────────
