@@ -88,7 +88,7 @@ var currentWeekStart = null;
 // SECTION 4: GOOGLE OAUTH
 // ─────────────────────────────────────────────
 
-var GOOGLE_CLIENT_ID = 'YOUR_CLIENT_ID_HERE';
+var GOOGLE_CLIENT_ID = '483435919833-amqn192codoj521iqu5ciul7v5piur0u.apps.googleusercontent.com';
 var GOOGLE_SCOPES    = 'https://www.googleapis.com/auth/calendar';
 
 function signInWithGoogle() {
