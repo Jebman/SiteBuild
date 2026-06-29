@@ -7,400 +7,11 @@
   <meta name="description" content="Personal website — writing, projects, and more." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #f5f4ef;
-      --bg2: #eceae2;
-      --text: #1a1a18;
-      --muted: #7a7870;
-      --accent: #1a1a18;
-      --border: rgba(0,0,0,0.10);
-      --tag-bg: rgba(0,0,0,0.06);
-      --link: #1a1a18;
-      --mono: 'DM Mono', monospace;
-      --sans: 'DM Sans', sans-serif;
-    }
-
-    [data-theme="dark"] {
-      --bg: #141412;
-      --bg2: #1e1d1a;
-      --text: #e8e6de;
-      --muted: #7a7870;
-      --accent: #e8e6de;
-      --border: rgba(255,255,255,0.09);
-      --tag-bg: rgba(255,255,255,0.07);
-      --link: #e8e6de;
-    }
-
-    html { font-size: 16px; }
-
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-      transition: background 0.2s, color 0.2s;
-      min-height: 100vh;
-    }
-
-    a {
-      color: var(--link);
-      text-decoration: none;
-    }
-
-    /* ── Layout ── */
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ── Nav ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 0;
-      transition: background 0.2s;
-    }
-
-    nav .inner {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-family: var(--mono);
-      font-weight: 500;
-      font-size: 15px;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: lowercase;
-      letter-spacing: 0.02em;
-      transition: color 0.15s;
-    }
-
-    .nav-links a:hover { color: var(--text); }
-
-    .social-links {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .social-links a {
-      color: var(--muted);
-      transition: color 0.15s;
-      display: flex;
-      align-items: center;
-    }
-
-    .social-links a:hover { color: var(--text); }
-
-    .social-links svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-
-    /* ── Theme toggle ── */
-    .theme-toggle {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: color 0.15s, border-color 0.15s;
-      letter-spacing: 0.02em;
-    }
-
-    .theme-toggle:hover { color: var(--text); border-color: var(--text); }
-
-    /* ── Main content ── */
-    main { padding: 80px 0 120px; }
-
-    /* ── Section ── */
-    .section {
-      margin-bottom: 72px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .section-num {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
-
-    .section-title {
-      font-size: 11px;
-      font-family: var(--mono);
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 400;
-    }
-
-    /* ── Hero ── */
-    .hero h1 {
-      font-size: clamp(32px, 6vw, 48px);
-      font-weight: 300;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 16px;
-    }
-
-    .hero h1 em {
-      font-style: italic;
-      font-weight: 300;
-      color: var(--muted);
-    }
-
-    .tagline {
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--muted);
-      letter-spacing: 0.02em;
-    }
-
-    .tagline span { margin: 0 8px; opacity: 0.4; }
-
-    /* ── Stack group ── */
-    .stack-group {
-      margin-bottom: 36px;
-    }
-
-    .stack-group-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .stack-items {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .stack-item {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      padding: 11px 0;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.1s;
-    }
-
-    .stack-item:last-child { border-bottom: none; }
-
-    .stack-item-left {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-    }
-
-    .stack-num {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      opacity: 0.6;
-      min-width: 18px;
-    }
-
-    .stack-name {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--text);
-    }
-
-    .stack-name a {
-      color: var(--text);
-      transition: opacity 0.15s;
-    }
-
-    .stack-name a:hover { opacity: 0.6; }
-
-    .stack-desc {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      text-align: right;
-      max-width: 220px;
-    }
-
-    /* ── Work items ── */
-    .work-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: start;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-      gap: 16px;
-    }
-
-    .work-item:first-child { border-top: 1px solid var(--border); }
-
-    .work-name {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .work-name a {
-      color: var(--text);
-      transition: opacity 0.15s;
-    }
-
-    .work-name a:hover { opacity: 0.6; }
-
-    .work-role {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-
-    .work-desc {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 6px;
-      line-height: 1.55;
-    }
-
-    .work-num {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      opacity: 0.5;
-      padding-top: 3px;
-    }
-
-    /* ── Tags ── */
-    .tag {
-      display: inline-block;
-      background: var(--tag-bg);
-      border-radius: 3px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      padding: 2px 7px;
-      letter-spacing: 0.03em;
-      margin-right: 4px;
-    }
-
-    /* ── Writing ── */
-    .writing-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      gap: 16px;
-    }
-
-    .writing-item:first-child { border-top: 1px solid var(--border); }
-
-    .writing-title {
-      font-size: 14px;
-      color: var(--text);
-    }
-
-    .writing-title a { color: var(--text); transition: opacity 0.15s; }
-    .writing-title a:hover { opacity: 0.6; }
-
-    .writing-date {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 0;
-    }
-
-    footer .inner {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    footer p {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    /* ── Animate in ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .section {
-      opacity: 0;
-      animation: fadeUp 0.5s ease forwards;
-    }
-
-    .section:nth-child(1) { animation-delay: 0.05s; }
-    .section:nth-child(2) { animation-delay: 0.15s; }
-    .section:nth-child(3) { animation-delay: 0.25s; }
-    .section:nth-child(4) { animation-delay: 0.35s; }
-    .section:nth-child(5) { animation-delay: 0.45s; }
-
-    /* ── Mobile ── */
-    @media (max-width: 540px) {
-      .nav-links { display: none; }
-      .work-desc { font-size: 12px; }
-      .stack-desc { display: none; }
-    }
-  </style>
-</head>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/components/base.css" />
+  <link rel="stylesheet" href="../css/components/cards.css" />
+  <link rel="stylesheet" href="../css/pages/index.css"/>
+ </head>
 <body>
 
   <!-- ── Nav ── -->
@@ -414,15 +25,12 @@
           <li><a href="#writing">writing</a></li>
         </ul>
         <div class="social-links">
-          <!-- X / Twitter -->
-          <a href="https://x.com/yourhandle" target="_blank" rel="noopener" aria-label="X / Twitter">
+          <a href="https://x.com/yourhandle" target="_blank" rel="noopener" aria-label="X">
             <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.254 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </a>
-          <!-- LinkedIn -->
           <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener" aria-label="LinkedIn">
             <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
-          <!-- GitHub -->
           <a href="https://github.com/yourusername" target="_blank" rel="noopener" aria-label="GitHub">
             <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
           </a>
@@ -439,83 +47,72 @@
       <!-- 01 / Intro -->
       <section class="section hero" id="intro">
         <div class="section-header">
+          <span class="line"></span>
           <span class="section-num">01</span>
         </div>
         <h1>Hey, I'm <em>Kohin Gautam</em></h1>
-        <p class="tagline">Builder<span>·</span>Thinker<span>·</span>Maker</p>
+        <p class="tagline">Builder <span>·</span> Thinker <span>·</span> Maker</p>
       </section>
 
       <!-- 02 / Stack -->
       <section class="section" id="stack">
         <div class="section-header">
+          <span class="line"></span>
           <span class="section-num">02</span>
           <span class="section-title">Current Stack</span>
         </div>
 
         <div class="stack-group">
           <div class="stack-group-label">Productivity</div>
-          <div class="stack-items">
-            <div class="stack-item">
-              <div class="stack-item-left">
-                <span class="stack-num">01</span>
-                <span class="stack-name"><a href="https://notion.so" target="_blank">Notion</a></span>
-              </div>
-              <span class="stack-desc">Notes & project management</span>
-            </div>
-            <div class="stack-item">
-              <div class="stack-item-left">
-                <span class="stack-num">02</span>
-                <span class="stack-name"><a href="https://linear.app" target="_blank">Linear</a></span>
-              </div>
-              <span class="stack-desc">Issue tracking</span>
-            </div>
+          <div class="card-grid card-grid--2">
+            <a class="card" href="https://notion.so" target="_blank">
+              <span class="card-title">Notion</span>
+              <span class="card-meta">Notes &amp; project management</span>
+              <span class="card-num">01</span>
+            </a>
+            <a class="card" href="https://linear.app" target="_blank">
+              <span class="card-title">Linear</span>
+              <span class="card-meta">Issue tracking</span>
+              <span class="card-num">02</span>
+            </a>
           </div>
         </div>
 
+
         <div class="stack-group">
           <div class="stack-group-label">Dev</div>
-          <div class="stack-items">
-            <div class="stack-item">
-              <div class="stack-item-left">
-                <span class="stack-num">01</span>
-                <span class="stack-name"><a href="https://cursor.com" target="_blank">Cursor</a></span>
-              </div>
-              <span class="stack-desc">AI-powered code editor</span>
-            </div>
-            <div class="stack-item">
-              <div class="stack-item-left">
-                <span class="stack-num">02</span>
-                <span class="stack-name"><a href="https://vercel.com" target="_blank">Vercel</a></span>
-              </div>
-              <span class="stack-desc">Hosting & deployment</span>
-            </div>
-            <div class="stack-item">
-              <div class="stack-item-left">
-                <span class="stack-num">03</span>
-                <span class="stack-name"><a href="https://github.com" target="_blank">GitHub</a></span>
-              </div>
-              <span class="stack-desc">Source control</span>
-            </div>
+          <div class="card-grid card-grid--2">
+            <a class="card" href="https://cursor.com" target="_blank">
+              <span class="card-title">Cursor</span>
+              <span class="card-meta">AI‑powered code editor</span>
+              <span class="card-num">01</span>
+            </a>
+            <a class="card" href="https://vercel.com" target="_blank">
+              <span class="card-title">Vercel</span>
+              <span class="card-meta">Hosting &amp; deployment</span>
+              <span class="card-num">02</span>
+            </a>
+            <a class="card" href="https://github.com" target="_blank">
+              <span class="card-title">GitHub</span>
+              <span class="card-meta">Source control</span>
+              <span class="card-num">03</span>
+            </a>
           </div>
         </div>
 
         <div class="stack-group">
           <div class="stack-group-label">Creative</div>
-          <div class="stack-items">
-            <div class="stack-item">
-              <div class="stack-item-left">
-                <span class="stack-num">01</span>
-                <span class="stack-name"><a href="https://figma.com" target="_blank">Figma</a></span>
-              </div>
-              <span class="stack-desc">Design & prototyping</span>
-            </div>
-            <div class="stack-item">
-              <div class="stack-item-left">
-                <span class="stack-num">02</span>
-                <span class="stack-name"><a href="https://arc.net" target="_blank">Arc Browser</a></span>
-              </div>
-              <span class="stack-desc">Daily browsing</span>
-            </div>
+          <div class="card-grid card-grid--2">
+            <a class="card" href="https://figma.com" target="_blank">
+              <span class="card-title">Figma</span>
+              <span class="card-meta">Design &amp; prototyping</span>
+              <span class="card-num">01</span>
+            </a>
+            <a class="card" href="https://arc.net" target="_blank">
+              <span class="card-title">Arc Browser</span>
+              <span class="card-meta">Daily browsing</span>
+              <span class="card-num">02</span>
+            </a>
           </div>
         </div>
       </section>
@@ -523,56 +120,55 @@
       <!-- 03 / Work -->
       <section class="section" id="work">
         <div class="section-header">
+          <span class="line"></span>
           <span class="section-num">03</span>
           <span class="section-title">Past Work</span>
         </div>
 
-        <div class="work-item">
-          <div>
-            <div class="work-name"><a href="#" target="_blank">Project Alpha</a></div>
-            <div class="work-role">Founder — 2022–2024</div>
-            <div class="work-desc">A short description of what this project was about. One or two sentences max — keep it punchy.</div>
-          </div>
-          <div class="work-num">01</div>
-        </div>
-
-        <div class="work-item">
-          <div>
-            <div class="work-name"><a href="#" target="_blank">Acme Corp</a></div>
-            <div class="work-role">Engineer — 2020–2022</div>
-            <div class="work-desc">Built and shipped X. Led a team of Y. Something interesting you want the world to know.</div>
-          </div>
-          <div class="work-num">02</div>
-        </div>
-
-        <div class="work-item">
-          <div>
-            <div class="work-name"><a href="#" target="_blank">Open Source Lib</a></div>
-            <div class="work-role">Maintainer — 2019–present</div>
-            <div class="work-desc">Side project that grew into something real. Stars on GitHub, used in production by real companies.</div>
-          </div>
-          <div class="work-num">03</div>
+        <div class="card-grid card-grid--2">
+          <a class="card" href="#">
+            <span class="card-title">Project Alpha</span>
+            <span class="card-meta">Founder — 2022–2024</span>
+            <span class="card-desc">A short description of what this project was about. One or two sentences max — keep it punchy.</span>
+            <span class="card-num">01</span>
+          </a>
+          <a class="card" href="#">
+            <span class="card-title">Acme Corp</span>
+            <span class="card-meta">Engineer — 2020–2022</span>
+            <span class="card-desc">Built and shipped X. Led a team of Y. Something interesting you want the world to know.</span>
+            <span class="card-num">02</span>
+          </a>
+          <a class="card" href="#">
+            <span class="card-title">Open Source Lib</span>
+            <span class="card-meta">Maintainer — 2019–present</span>
+            <span class="card-desc">Side project that grew into something real. Stars on GitHub, used in production by real companies.</span>
+            <span class="card-tag">Popular</span>
+            <span class="card-num">03</span>
+          </a>
         </div>
       </section>
 
       <!-- 04 / Writing -->
       <section class="section" id="writing">
         <div class="section-header">
+          <span class="line"></span>
           <span class="section-num">04</span>
           <span class="section-title">Writing</span>
         </div>
 
-        <div class="writing-item">
-          <div class="writing-title"><a href="#">The thing I wish someone told me earlier</a></div>
-          <div class="writing-date">Jun 2026</div>
-        </div>
-        <div class="writing-item">
-          <div class="writing-title"><a href="#">How I think about building products</a></div>
-          <div class="writing-date">Apr 2026</div>
-        </div>
-        <div class="writing-item">
-          <div class="writing-title"><a href="#">On learning in public</a></div>
-          <div class="writing-date">Jan 2026</div>
+        <div class="card-grid">
+          <a class="card" href="#">
+            <span class="card-title">The thing I wish someone told me earlier</span>
+            <span class="card-meta">Jun 2026</span>
+          </a>
+          <a class="card" href="#">
+            <span class="card-title">How I think about building products</span>
+            <span class="card-meta">Apr 2026</span>
+          </a>
+          <a class="card" href="#">
+            <span class="card-title">On learning in public</span>
+            <span class="card-meta">Jan 2026</span>
+          </a>
         </div>
       </section>
 
@@ -582,30 +178,45 @@
   <!-- ── Footer ── -->
   <footer>
     <div class="inner">
-      <p>© 2026 Kohin Gautam</p>
-      <p>Made with care</p>
+      <p>© 2026 Kohin Gautam · Made with care</p>
     </div>
   </footer>
 
   <script>
     const toggle = document.getElementById('themeToggle');
     const root = document.documentElement;
-    let dark = false;
 
+    // Check saved preference or system
     const saved = localStorage.getItem('theme');
-    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      dark = true;
-      root.setAttribute('data-theme', 'dark');
+    let dark;
+
+    if (saved === 'light') {
+      dark = false;
+      root.setAttribute('data-theme', 'light');
       toggle.textContent = 'light';
+    } else if (saved === 'dark') {
+      dark = true;
+      root.removeAttribute('data-theme');
+      toggle.textContent = 'dark';
+    } else {
+      // No saved pref – default to dark
+      dark = true;
+      root.removeAttribute('data-theme');
+      toggle.textContent = 'dark';
     }
 
     toggle.addEventListener('click', () => {
       dark = !dark;
-      root.setAttribute('data-theme', dark ? 'dark' : '');
-      toggle.textContent = dark ? 'light' : 'dark';
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
+      if (dark) {
+        root.removeAttribute('data-theme');
+        toggle.textContent = 'dark';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        root.setAttribute('data-theme', 'light');
+        toggle.textContent = 'light';
+        localStorage.setItem('theme', 'light');
+      }
     });
   </script>
 </body>
 </html>
-

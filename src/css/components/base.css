@@ -1,9 +1,7 @@
 /* ════════════════════════════════════════
    base.css — global styles for all pages
-   Derived from the notebook theme.
-   Import this first, then your page CSS.
+   Dark, card-first aesthetic.
    ════════════════════════════════════════ */
-
 
 /* ── Reset ── */
 *,
@@ -14,57 +12,53 @@
     padding: 0;
 }
 
-
 /* ── Design tokens ── */
-/*
-  These variables are the single source of truth for the site's
-  visual identity. Change a value here and it updates everywhere.
-*/
 :root {
-    /* Surfaces */
-    --bg:       #f5f4ef;
-    --bg2:      #eceae2;
-    --card-bg:  rgba(255, 255, 255, 0.5);
+    /* Surfaces – dark by default */
+    --bg:       #0a0a0a;
+    --bg2:      #141414;
+    --card-bg:  var(--bg);      /* cards match the background */
 
     /* Text */
-    --text:     #1a1a18;
-    --muted:    #7a7870;
-    --link:     #1a1a18;
-    --accent:   #1a1a18;
-
-    /* Borders & shadow */
-    --border:   rgba(0, 0, 0, 0.10);
-    --tag-bg:   rgba(0, 0, 0, 0.06);
-    --shadow:   0 2px 12px rgba(0, 0, 0, 0.04);
-
-    /* Shape */
-    --radius:   8px;
-
-    /* Typography */
-    --sans:     'DM Sans', sans-serif;
-    --mono:     'DM Mono', monospace;
-
-    /* Motion */
-    --transition: 0.2s ease;
-}
-
-[data-theme="dark"] {
-    --bg:       #141412;
-    --bg2:      #1e1d1a;
-    --card-bg:  rgba(30, 29, 26, 0.7);
-
     --text:     #e8e6de;
     --muted:    #7a7870;
     --link:     #e8e6de;
     --accent:   #e8e6de;
 
-    --border:   rgba(255, 255, 255, 0.09);
+    /* Borders & shadow */
+    --border:   rgba(255, 255, 255, 0.08);
     --tag-bg:   rgba(255, 255, 255, 0.07);
-    --shadow:   0 2px 16px rgba(0, 0, 0, 0.3);
+    --shadow:   0 2px 16px rgba(0, 0, 0, 0.5);
+
+    /* Shape */
+    --radius:   6px;
+
+    /* Typography */
+    --sans:     'DM Sans', sans-serif;
+    --mono:     'DM Mono', monospace;
+    --serif:    'DM Serif Display', serif;
+
+    /* Motion */
+    --transition: 0.2s ease;
 }
 
+/* Light theme override */
+[data-theme="light"] {
+    --bg:       #f5f4ef;
+    --bg2:      #eceae2;
+    --card-bg:  var(--bg);
 
-/* ── Base typography ── */
+    --text:     #1a1a18;
+    --muted:    #7a7870;
+    --link:     #1a1a18;
+    --accent:   #1a1a18;
+
+    --border:   rgba(0, 0, 0, 0.08);
+    --tag-bg:   rgba(0, 0, 0, 0.06);
+    --shadow:   0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* ── Base ── */
 html {
     font-size: 16px;
 }
@@ -82,17 +76,14 @@ a {
     color: var(--link);
     text-decoration: none;
 }
-
 a:hover {
     opacity: 0.75;
 }
-
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar       { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
 
 /* ── Layout ── */
 .container {
@@ -105,23 +96,7 @@ main {
     padding: 60px 0 100px;
 }
 
-
 /* ── Navigation ── */
-/*
-  Assumes every page shares this nav structure:
-    <nav>
-      <div class="inner">
-        <a class="logo">…</a>
-        <div class="nav-right">
-          <ul class="nav-links">…</ul>
-          <div class="social-links">…</div>
-          <button class="theme-toggle">…</button>
-        </div>
-      </div>
-    </nav>
-
-  If a page has a different nav, override these in that page's CSS.
-*/
 nav {
     position: sticky;
     top: 0;
@@ -142,9 +117,9 @@ nav .inner {
 }
 
 .logo {
-    font-family: var(--mono);
-    font-weight: 500;
-    font-size: 15px;
+    font-family: var(--serif);
+    font-size: 20px;
+    font-style: italic;
     letter-spacing: -0.02em;
     color: var(--text);
 }
@@ -190,8 +165,8 @@ nav .inner {
     color: var(--text);
 }
 .social-links svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     fill: currentColor;
 }
 
@@ -212,12 +187,7 @@ nav .inner {
     border-color: var(--text);
 }
 
-
-/* ── Section layout ── */
-/*
-  Reusable section wrapper used on most pages.
-  Page CSS can add animation-delay per section index.
-*/
+/* ── Section headers (with decorative line) ── */
 .section {
     margin-bottom: 56px;
     animation: fadeUp 0.5s ease forwards;
@@ -226,10 +196,20 @@ nav .inner {
 
 .section-header {
     display: flex;
-    align-items: baseline;
-    gap: 16px;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 28px;
-    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+}
+
+.section-header .line {
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+    flex-shrink: 0;
 }
 
 .section-num {
@@ -261,8 +241,7 @@ nav .inner {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-
-/* ── Buttons ── */
+/* ── Buttons (unchanged) ── */
 .btn-primary {
     font-family: var(--mono);
     font-size: 11px;
@@ -303,12 +282,7 @@ nav .inner {
     border-color: #d14;
 }
 
-
 /* ── Form controls ── */
-/*
-  Shared input/select/textarea styles.
-  These are base styles — page CSS can refine sizing or layout.
-*/
 .form-group {
     margin-bottom: 18px;
 }
@@ -365,7 +339,6 @@ nav .inner {
     padding: 8px 20px;
 }
 
-
 /* ── Utility ── */
 .stats-badge {
     font-family: var(--mono);
@@ -394,7 +367,6 @@ nav .inner {
     margin-top: 6px;
 }
 
-/* Tag / status pill — base style, pages override colors */
 .tag {
     font-family: var(--mono);
     font-size: 9px;
@@ -407,7 +379,6 @@ nav .inner {
     background: var(--tag-bg);
 }
 
-
 /* ── Footer ── */
 footer {
     border-top: 1px solid var(--border);
@@ -418,15 +389,15 @@ footer .inner {
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 footer p {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--muted);
+    letter-spacing: 0.02em;
 }
-
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
