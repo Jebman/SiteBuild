@@ -4,8 +4,18 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Health Dashboard</title>
-  <link rel="stylesheet" href="css/dashboard.css"/>
-  <link rel="stylesheet" href="css/sidebar.css"/>
+
+  <!--
+    Load order:
+    1. base.css    — reset, design tokens, global styles
+    2. cards.css   — reusable card components (depends on base tokens)
+    3. sidebar.css — sidebar component (depends on base + dashboard tokens)
+    4. dashboard.css — page-specific overrides & dashboard-only tokens
+  -->
+  <link rel="stylesheet" href="../css/components/base.css"/>
+  <link rel="stylesheet" href="../css/components/cards.css"/>
+  <link rel="stylesheet" href="../css/components/sidebar.css"/>
+  <link rel="stylesheet" href="../css/pages/dashboard.css"/>
 </head>
 <body>
 
@@ -199,7 +209,13 @@
   </div><!-- /content -->
 </div><!-- /main -->
 
-<script src="js/dashboard.js"></script>
-<script src="js/sidebar.js"></script>
+<!--
+  store.js uses defer so a 404 won't throw a blocking error before
+  dashboard.js runs. dashboard.js and sidebar.js also deferred for
+  the same reason and to ensure DOM is ready.
+-->
+<script src="../js/store.js" defer></script>
+<script src="../js/pages/dashboard.js" defer></script>
+<script src="../js/components/sidebar.js" defer></script>
 </body>
 </html>

@@ -1,34 +1,95 @@
-/* ── Sidebar ── */
-.sidebar{
-  position:fixed;top:0;left:0;width:160px;height:100vh;
-  background:var(--bg2);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;padding:16px 0;z-index:10;
-}
-.sidebar-back{
-  display:flex;align-items:center;gap:8px;padding:8px 16px;
-  font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:16px;
-  border:none;background:none;text-decoration:none;
-  transition:color 0.15s;
-}
-.sidebar-back:hover{color:var(--text);}
-.sidebar-back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
-.sidebar-nav{display:flex;flex-direction:column;gap:2px;padding:0 8px;}
-.sidebar-item{
-  display:flex;align-items:center;gap:10px;padding:8px 10px;
-  font-size:12px;border-radius:6px;cursor:pointer;color:var(--muted);
-  transition:background 0.15s,color 0.15s;text-decoration:none;
-}
-.sidebar-item:hover{background:var(--bg3);color:var(--text);}
-.sidebar-item.active{background:var(--bg3);color:var(--text);}
-.sidebar-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
+/* ════════════════════════════════════════
+   sidebar.css — sidebar component
+   Depends on: base.css (--bg2, --border, --muted, --text)
+               dashboard.css (--bg3, --muted2)
+   ════════════════════════════════════════ */
 
-/* Indented child items */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 160px;
+  height: 100vh;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+  z-index: 10;
+}
+
+.sidebar-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  margin-bottom: 16px;
+  border: none;
+  background: none;
+  text-decoration: none;
+  font-family: var(--mono);
+  transition: color var(--transition);
+}
+
+.sidebar-back:hover {
+  color: var(--text);
+}
+
+.sidebar-back svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: var(--mono);
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--muted);
+  transition: background var(--transition), color var(--transition);
+  text-decoration: none;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+  background: var(--bg3);
+  color: var(--text);
+}
+
+.sidebar-item svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+/* ── Indented child items ── */
 .sidebar-child {
   padding-left: 28px;
   font-size: 11px;
 }
 
-/* Arrow indicator */
+/* ── Expand/collapse arrow ── */
 .sidebar-arrow {
   margin-left: auto;
   font-size: 14px;
@@ -36,16 +97,18 @@
   transition: transform 0.2s;
   display: inline-block;
 }
+
 .sidebar-arrow.open {
   transform: rotate(90deg);
 }
 
-/* Children container — hidden by default, animates open */
+/* ── Children container ── */
 .sidebar-children {
   display: none;
   flex-direction: column;
   gap: 2px;
 }
+
 .sidebar-children.open {
   display: flex;
 }
