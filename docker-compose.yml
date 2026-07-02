@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   web:
     image: python:3-alpine
     container_name: health-calendar
     ports:
       - "8080:8000"
-    working_dir: /app
+    working_dir: /app/src/pages
     volumes:
       - ./:/app
     command: python -m http.server 8000
