@@ -1,6 +1,5 @@
 /* ════════════════════════════════════════
    cards.css — reusable card components
-   Import this after base.css.
    ════════════════════════════════════════ */
 
 /* ── Card grid ── */
@@ -10,7 +9,7 @@
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: 0; /* sharp */
     overflow: hidden;
 }
 
@@ -18,74 +17,39 @@
 .card-grid--2 {
     grid-template-columns: 1fr 1fr;
 }
-
 .card-grid--3 {
     grid-template-columns: 1fr 1fr 1fr;
 }
 
 /* ── Base card ── */
 .card {
-    background: var(--card-bg);   /* same as page background */
+    background: var(--card-bg);
     padding: 16px 18px;
     transition: background var(--transition);
     display: flex;
     flex-direction: column;
     gap: 4px;
+    border-radius: 0; /* sharp */
 }
 
 /* Make card links look like cards */
 a.card {
-  color: var(--text);
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-/* Keep hover consistent with base.css */
+/* Hover effect */
 a.card:hover {
-  background: rgba(255, 255, 255, 0.04);
-}
-[data-theme="light"] a.card:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-/* Ensure title, meta, desc stack vertically */
-.card-title,
-.card-meta,
-.card-desc {
-  display: block;
-}
-
-/* Hover effect – subtle lift */
-.card:hover {
     background: rgba(255, 255, 255, 0.04);
 }
-
-[data-theme="light"] .card:hover {
+[data-theme="light"] a.card:hover {
     background: rgba(0, 0, 0, 0.04);
 }
 
-/* ── Card sizes ── */
-.card--sm {
-    padding: 12px 14px;
-}
-.card--lg {
-    padding: 24px 28px;
-}
-
-/* ── Card layout orientations ── */
-.card--row {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-.card--col {
-    flex-direction: column;
-}
-
-/* ── Card inner elements ── */
+/* Card inner elements */
 .card-title {
     font-size: 14px;
     font-weight: 500;
@@ -130,6 +94,21 @@ a.card:hover {
     font-size: 10px;
     color: var(--muted);
     letter-spacing: 0.03em;
+}
+
+/* ── Card sizes ── */
+.card--sm { padding: 12px 14px; }
+.card--lg { padding: 24px 28px; }
+
+/* ── Card orientations ── */
+.card--row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.card--col {
+    flex-direction: column;
 }
 
 /* ── Responsive ── */

@@ -4,14 +4,12 @@
    display:none means they're invisible until JS shows them.
 ------------------------------------------------- */
 
-
 #logBtn {
-  position: fixed;        /* stays in place even when you scroll */
-  bottom: 28px;           /* 28px from the bottom of the screen */
-  right: 28px;            /* 28px from the right edge */
-  z-index: 99;            /* sits above page content but below the modal */
-
-  background: #e8621a;    /* your orange accent color */
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 99;
+  background: #e8621a;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -20,7 +18,7 @@
   letter-spacing: 0.1em;
   font-family: 'Courier New', monospace;
   cursor: pointer;
-  transition: opacity 0.15s;  /* smooth hover effect */
+  transition: opacity 0.15s;
 }
 
 #logBtn:hover {
@@ -29,12 +27,11 @@
 
 /* The dim overlay that covers the page when modal is open */
 #modalBackdrop {
-  position: fixed;    /* covers the entire screen */
-  inset: 0;           /* shorthand for top:0, right:0, bottom:0, left:0 */
-  background: rgba(0, 0, 0, 0.65);  /* semi-transparent black */
-  z-index: 100;       /* above everything on the page */
-  
-  /* Fade in animation */
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 100;
   animation: backdropIn 0.15s ease;
 }
 
@@ -45,41 +42,21 @@
 
 /* The white (dark) box that appears in the center */
 #modal {
-  display:none;
+  display: none;
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);  /* perfectly centers it */
-  z-index: 101;    /* one above the backdrop */
-
+  transform: translate(-50%, -50%);
+  z-index: 101;
   width: 480px;
-  max-width: calc(100vw - 40px);  /* doesn't overflow on small screens */
-  max-height: 85vh;               /* doesn't go off-screen vertically */
-  overflow-y: auto;               /* scroll inside if content is long */
-
+  max-width: calc(100vw - 40px);
+  max-height: 85vh;
+  overflow-y: auto;
   background: #141412;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   padding: 28px;
-
-  /* Slide up + fade in when it appears */
   animation: modalIn 0.2s ease;
-}
-
-#modalBackdrop {
-  display: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: rgba(0,0,0,0.65);
-  z-index: 100;
-}
-
-/* Animation only runs when JS adds the 'open' class */
-#modalBackdrop.open {
-  animation: backdropIn 0.15s ease;
 }
 
 @keyframes modalIn {
@@ -91,17 +68,17 @@
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #7a7870;      /* muted, matches your dashboard style */
+  color: #7a7870;
   margin-bottom: 24px;
-  font-weight: 400;    /* not bold — matches your aesthetic */
+  font-weight: 400;
 }
 
 #modal label {
-  display: block;         /* each label sits on its own line */
+  display: block;
   font-size: 9px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #5a5850;         /* even more muted than the heading */
+  color: #5a5850;
   margin-bottom: 6px;
   margin-top: 18px;
 }
@@ -109,10 +86,10 @@
 #modal input[type="text"],
 #modal textarea {
   width: 100%;
-  background: #1a1a17;       /* slightly lighter than modal bg */
+  background: #1a1a17;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 4px;
-  color: #e8e6de;            /* your main text color */
+  color: #e8e6de;
   font-size: 13px;
   font-family: inherit;
   padding: 9px 12px;
@@ -120,20 +97,19 @@
   transition: border-color 0.15s;
 }
 
-/* Highlight border when the user clicks into a field */
 #modal input[type="text"]:focus,
 #modal textarea:focus {
-  border-color: rgba(232, 98, 26, 0.5);  /* subtle orange glow on focus */
+  border-color: rgba(232, 98, 26, 0.5);
 }
 
 #modal textarea {
-  resize: vertical;    /* user can drag it taller but not wider */
+  resize: vertical;
   min-height: 72px;
 }
 
 #setsTable {
   width: 100%;
-  border-collapse: collapse;   /* removes double-borders between cells */
+  border-collapse: collapse;
   margin-top: 16px;
 }
 
@@ -151,9 +127,8 @@
   padding: 6px 8px 6px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   vertical-align: middle;
-} 
+}
 
-/* Number inputs inside the table */
 #setsTable input[type="number"] {
   width: 72px;
   background: #1a1a17;
@@ -171,13 +146,11 @@
   border-color: rgba(232, 98, 26, 0.5);
 }
 
-/* Hide the little up/down arrows browsers add to number inputs */
 #setsTable input[type="number"]::-webkit-outer-spin-button,
 #setsTable input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-/* "+ Add Set" button */
 #modal .btn-add-set {
   background: none;
   border: 1px dashed rgba(255, 255, 255, 0.15);
@@ -197,7 +170,6 @@
   color: #e8621a;
 }
 
-/* Row of Cancel / Save at the bottom */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -234,7 +206,6 @@
 
 .btn-save:hover { opacity: 0.85; }
 
-/* Remove row button (✕) in each set row */
 .btn-remove-row {
   background: none;
   border: none;
@@ -247,7 +218,6 @@
 
 .btn-remove-row:hover { color: #e84040; }
 
-/* Toast notification (brief confirmation after saving) */
 #toast {
   position: fixed; bottom: 80px; right: 28px; z-index: 200;
   background: var(--bg3); border: 1px solid var(--border2);

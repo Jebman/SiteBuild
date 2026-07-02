@@ -3,11 +3,9 @@
    Requires: base.css loaded first
    ════════════════════════════════════════ */
 
-
 /* ── Section animation delays ── */
 .section:nth-child(1) { animation-delay: 0.05s; }
 .section:nth-child(2) { animation-delay: 0.15s; }
-
 
 /* ── Search & sort controls ── */
 .search-input {
@@ -46,7 +44,6 @@
     padding-right: 28px;
 }
 .sort-select:focus { border-color: var(--text); }
-
 
 /* ── Book grid ── */
 .book-grid {
@@ -100,6 +97,9 @@
     letter-spacing: 0.04em;
     opacity: 0.4;
     user-select: none;
+    display: flex;            /* added */
+    align-items: center;      /* added */
+    justify-content: center;  /* added */
 }
 
 .book-title {

@@ -346,6 +346,7 @@ async function renderWeek() {
         var endHour = WORKOUT_TIME.start + WORKOUT_TIME.duration;
         var rowSpan = WORKOUT_TIME.duration;
         html += '<div class="workout-block ' + colorClass + '" ' +
+                'data-workout="' + workoutKey + '" ' +    // <-- ADDED
                 'style="top:0;height:' + (rowSpan * 48 - 4) + 'px;" ' +
                 'onclick="event.stopPropagation();openDayPanel(\'' + dateStr + '\')">' +
                 '<div class="workout-block-name">' + labelDisplay + '</div>' +
@@ -408,16 +409,8 @@ function openDayPanel(dateStr) {
     if (cells[i].dataset.date === dateStr) {
       var block = cells[i].querySelector('.workout-block');
       if (block) {
-        var nameEl = block.querySelector('.workout-block-name');
-        if (nameEl) {
-          var label = nameEl.textContent.trim();
-          for (var key in WORKOUTS) {
-            if (WORKOUTS[key].label === label) {
-              workoutKey = key;
-              break;
-            }
-          }
-        }
+        // Use data attribute instead of parsing text
+        workoutKey = block.dataset.workout || null;
       }
       break;
     }

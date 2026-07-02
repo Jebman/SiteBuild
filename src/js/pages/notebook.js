@@ -1,4 +1,3 @@
-
 // ────────────────────────────────────────
 //  DOM refs
 // ────────────────────────────────────────
@@ -316,6 +315,7 @@ async function fetchCoverFromOpenLibrary(title, author) {
     try {
         const query = encodeURIComponent(`${title} ${author || ''}`);
         const res = await fetch(`https://openlibrary.org/search.json?q=${query}&limit=1`);
+        if (!res.ok) throw new Error('Network response not ok');
         const data = await res.json();
         if (data.docs && data.docs.length > 0) {
             const doc = data.docs[0];
@@ -333,6 +333,7 @@ async function fetchCoverFromOpenLibrary(title, author) {
                 img.src = url;
             }
         }
-    } catch (_) { /* ignore network errors */ }
+    } catch (_) {
+        // silently ignore network errors – user can still add manually
+    }
 }
-

@@ -78,7 +78,7 @@ function saveEntry() {
     date:      today,
     exercise,
     sets,
-    notes:     document.getElementById('inputNotes').value.trim(),
+    notes:     document.getElementById('inputNotes').value.trim() || '', // <-- fixed
     loggedAt:  new Date().toISOString(),
   };
 
@@ -95,7 +95,5 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000); // disappears after 3s
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
-
-

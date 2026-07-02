@@ -1,39 +1,9 @@
 /* ════════════════════════════════════════
    dashboard.css — page-specific styles
    Depends on: base.css, cards.css, sidebar.css
-   ════════════════════════════════════════
-
-   NOTE: The reset and core design tokens (--bg, --bg2, --border,
-   --text, --muted, --mono, --sans) live in base.css.
-   Only dashboard-specific tokens are defined here.
-*/
-
-/* ── Dashboard-only tokens ── */
-:root {
-  --bg3:     #1a1a17;
-  --bg4:     #222220;
-  --border2: rgba(255, 255, 255, 0.12);
-  --muted2:  #5a5850;
-  --orange:  #e8621a;
-  --green:   #39d98a;
-  --red:     #e84040;
-  --blue:    #4a9eff;
-  --purple:  #a78bfa;
-}
-
-[data-theme="light"] {
-  --bg3:    #e4e2da;
-  --bg4:    #d8d6ce;
-  --muted2: #9a9890;
-}
+   ════════════════════════════════════════ */
 
 /* ── Layout shell ── */
-/*
-  IMPORTANT: html + body need explicit height:100% so that chart
-  libraries (Chart.js etc.) can resolve percentage-based canvas
-  dimensions. base.css only sets min-height:100vh on body, which
-  is not the same thing — do not remove these two rules.
-*/
 html, body {
   height: 100%;
 }
@@ -132,7 +102,6 @@ body {
   border-radius: var(--radius);
   overflow: hidden;
   margin-bottom: 16px;
-  /* Match page background; border provides separation */
   background: var(--bg);
 }
 
@@ -143,7 +112,6 @@ body {
   flex-direction: column;
   gap: 6px;
   position: relative;
-  /* Transparent so signal-bar background shows through */
   background: transparent;
   transition: background var(--transition);
 }
@@ -211,7 +179,6 @@ body {
 }
 
 .metric-card {
-  /* Match page background; only the border defines the card edge */
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);

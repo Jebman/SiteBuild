@@ -24,22 +24,24 @@ const ICONS = {
 };
 
 function renderSidebar(nav, currentPath) {
+  const currentFile = currentPath.split('/').pop() || 'index.html'; // get filename only
+
   const items = nav.map(function(item) {
     if (item.divider) {
       return '<div style="height:1px;background:var(--border);margin:8px 16px;"></div>';
     }
 
     // Check if this item or any of its children match the current page
-    const selfActive    = currentPath.includes(item.href);
+    const selfActive    = currentFile === item.href;
     const childActive   = item.children && item.children.some(function(c) {
-      return currentPath.includes(c.href);
+      return currentFile === c.href;
     });
     const isActive      = selfActive || childActive;
     const isOpen        = childActive; // expand automatically if a child is active
 
     if (item.children) {
       const childItems = item.children.map(function(child) {
-        const childIsActive = currentPath.includes(child.href) ? ' active' : '';
+        const childIsActive = currentFile === child.href ? ' active' : '';
         return '<a class="sidebar-item sidebar-child' + childIsActive + '" href="' + child.href + '">' +
                  (ICONS[child.icon] || '') +
                  child.label +
