@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Health Dashboard</title>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="./src/css/components/base.css"/>
   <link rel="stylesheet" href="./src/css/components/cards.css"/>
   <link rel="stylesheet" href="./src/css/components/sidebar.css"/>
@@ -13,12 +12,13 @@
 </head>
 <body>
 
-  <!-- Sidebar -->
+  <!-- ── Sidebar ── -->
   <aside id="sidebar" class="sidebar"></aside>
 
-  <!-- Main -->
+  <!-- ── Main ── -->
   <div class="main">
 
+    <!-- ── Topbar ── -->
     <header class="topbar">
       <div class="dash-title">HEALTH DASHBOARD</div>
       <div class="topbar-right">
@@ -33,7 +33,7 @@
 
     <div class="content">
 
-      <!-- Signal bar (same as before) -->
+ <!-- Signal bar (same as before) -->
       <div class="signal-bar">
         <div class="signal-card">
           <div class="signal-label">READINESS SCORE</div>
@@ -103,108 +103,197 @@
         </div>
       </div>
 
-      <!-- Metric cards with log buttons -->
+
+      <!-- ── Metric cards with flip (date‑based) ── -->
       <div class="metric-grid">
 
+        <!-- HRV -->
         <div class="metric-card" data-metric="hrv">
-          <div class="metric-header">
-            <div class="metric-label">HEART RATE VARIABILITY</div>
-            <div class="metric-header-right">
-              <div class="metric-badge">RECOVERY</div>
-              <button class="log-btn" data-metric="hrv">Log</button>
+          <div class="flipper">
+            <div class="front card-front">
+              <div class="metric-header">
+                <div class="metric-label">HEART RATE VARIABILITY</div>
+                <div class="metric-header-right">
+                  <div class="metric-badge">RECOVERY</div>
+                </div>
+              </div>
+              <div class="metric-number">
+                <span class="metric-big" style="color:var(--green);">52</span>
+                <span class="metric-unit">MS</span>
+              </div>
+              <div class="metric-change">
+                <span class="up">▲ +8%</span>
+                <span class="metric-change-label">Last entry</span>
+              </div>
+              <div class="chart-area"><canvas id="chart1" style="width:100%;height:100%;"></canvas></div>
+              <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+              <div class="chart-footer">
+                <div class="chart-footer-note"><span class="dot" style="background:var(--green)"></span>HRV TRENDING UP</div>
+                <div>7D AVG: <span class="avg-display">49</span> MS</div>
+              </div>
             </div>
-          </div>
-          <div class="metric-number">
-            <span class="metric-big" style="color:var(--green);">52</span>
-            <span class="metric-unit">MS</span>
-          </div>
-          <div class="metric-change">
-            <span class="up">▲ +8%</span>
-            <span class="metric-change-label">This week</span>
-          </div>
-          <div class="chart-area"><canvas id="chart1" style="width:100%;height:100%;"></canvas></div>
-          <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
-          <div class="chart-footer">
-            <div class="chart-footer-note"><span class="dot" style="background:var(--green)"></span>HRV TRENDING UP</div>
-            <div>7D AVG: 49 MS</div>
+            <div class="back">
+              <div style="text-align:center;width:100%;">
+                <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px;">Log HRV for a specific date</p>
+                <div style="margin-bottom:8px;">
+                  <label style="font-family:var(--mono);font-size:10px;color:var(--muted);display:block;">Date</label>
+                  <input type="date" id="date-hrv" class="metric-input" style="text-align:center;" />
+                </div>
+                <div style="margin-bottom:12px;">
+                  <label style="font-family:var(--mono);font-size:10px;color:var(--muted);display:block;">Value (ms)</label>
+                  <input type="number" step="any" id="input-hrv" placeholder="e.g. 55" class="metric-input" />
+                  <div style="font-size:10px;color:var(--muted);margin-top:4px;">Current value for this date: <span id="current-hrv" style="color:var(--text);">—</span></div>
+                </div>
+                <div style="display:flex;gap:8px;width:100%;">
+                  <button class="btn-primary" data-save="hrv" style="flex:1;">Save</button>
+                  <button class="btn-primary outline" data-close="hrv" style="flex:1;">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- Sleep -->
         <div class="metric-card" data-metric="sleep">
-          <div class="metric-header">
-            <div class="metric-label">SLEEP QUALITY</div>
-            <div class="metric-header-right">
-              <div class="metric-badge">NIGHTLY SCORE</div>
-              <button class="log-btn" data-metric="sleep">Log</button>
+          <div class="flipper">
+            <div class="front card-front">
+              <div class="metric-header">
+                <div class="metric-label">SLEEP QUALITY</div>
+                <div class="metric-header-right">
+                  <div class="metric-badge">NIGHTLY SCORE</div>
+                </div>
+              </div>
+              <div class="metric-number">
+                <span class="metric-big" style="color:var(--blue);">84</span>
+                <span class="metric-unit">/ 100</span>
+              </div>
+              <div class="metric-change">
+                <span class="down">▼ -3%</span>
+                <span class="metric-change-label">Last entry</span>
+              </div>
+              <div class="chart-area"><canvas id="chart2" style="width:100%;height:100%;"></canvas></div>
+              <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+              <div class="chart-footer">
+                <div class="chart-footer-note"><span class="dot" style="background:var(--blue)"></span>SLIGHT DIP LAST 3 NIGHTS</div>
+                <div>7D AVG: <span class="avg-display">82</span></div>
+              </div>
             </div>
-          </div>
-          <div class="metric-number">
-            <span class="metric-big" style="color:var(--blue);">84</span>
-            <span class="metric-unit">/ 100</span>
-          </div>
-          <div class="metric-change">
-            <span class="down">▼ -3%</span>
-            <span class="metric-change-label">This week</span>
-          </div>
-          <div class="chart-area"><canvas id="chart2" style="width:100%;height:100%;"></canvas></div>
-          <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
-          <div class="chart-footer">
-            <div class="chart-footer-note"><span class="dot" style="background:var(--blue)"></span>SLIGHT DIP LAST 3 NIGHTS</div>
-            <div>7D AVG: 82</div>
+            <div class="back">
+              <div style="text-align:center;width:100%;">
+                <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px;">Log Sleep Quality for a specific date</p>
+                <div style="margin-bottom:8px;">
+                  <label style="font-family:var(--mono);font-size:10px;color:var(--muted);display:block;">Date</label>
+                  <input type="date" id="date-sleep" class="metric-input" style="text-align:center;" />
+                </div>
+                <div style="margin-bottom:12px;">
+                  <label style="font-family:var(--mono);font-size:10px;color:var(--muted);display:block;">Score (0‑100)</label>
+                  <input type="number" step="any" id="input-sleep" placeholder="e.g. 88" class="metric-input" />
+                  <div style="font-size:10px;color:var(--muted);margin-top:4px;">Current value for this date: <span id="current-sleep" style="color:var(--text);">—</span></div>
+                </div>
+                <div style="display:flex;gap:8px;width:100%;">
+                  <button class="btn-primary" data-save="sleep" style="flex:1;">Save</button>
+                  <button class="btn-primary outline" data-close="sleep" style="flex:1;">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- Steps -->
         <div class="metric-card" data-metric="steps">
-          <div class="metric-header">
-            <div class="metric-label">DAILY STEPS</div>
-            <div class="metric-header-right">
-              <div class="metric-badge">ACTIVITY</div>
-              <button class="log-btn" data-metric="steps">Log</button>
+          <div class="flipper">
+            <div class="front card-front">
+              <div class="metric-header">
+                <div class="metric-label">DAILY STEPS</div>
+                <div class="metric-header-right">
+                  <div class="metric-badge">ACTIVITY</div>
+                </div>
+              </div>
+              <div class="metric-number">
+                <span class="metric-big" style="color:var(--orange);">8.4k</span>
+                <span class="metric-unit">STEPS</span>
+              </div>
+              <div class="metric-change">
+                <span class="up">▲ +12%</span>
+                <span class="metric-change-label">Last entry</span>
+              </div>
+              <div class="chart-area"><canvas id="chart3" style="width:100%;height:100%;"></canvas></div>
+              <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+              <div class="chart-footer">
+                <div class="chart-footer-note"><span class="dot" style="background:var(--orange)"></span>ABOVE WEEKLY GOAL</div>
+                <div>GOAL: 10K / DAY</div>
+              </div>
             </div>
-          </div>
-          <div class="metric-number">
-            <span class="metric-big" style="color:var(--orange);">8.4k</span>
-            <span class="metric-unit">STEPS</span>
-          </div>
-          <div class="metric-change">
-            <span class="up">▲ +12%</span>
-            <span class="metric-change-label">This week</span>
-          </div>
-          <div class="chart-area"><canvas id="chart3" style="width:100%;height:100%;"></canvas></div>
-          <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
-          <div class="chart-footer">
-            <div class="chart-footer-note"><span class="dot" style="background:var(--orange)"></span>ABOVE WEEKLY GOAL</div>
-            <div>GOAL: 10K / DAY</div>
+            <div class="back">
+              <div style="text-align:center;width:100%;">
+                <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px;">Log Steps for a specific date</p>
+                <div style="margin-bottom:8px;">
+                  <label style="font-family:var(--mono);font-size:10px;color:var(--muted);display:block;">Date</label>
+                  <input type="date" id="date-steps" class="metric-input" style="text-align:center;" />
+                </div>
+                <div style="margin-bottom:12px;">
+                  <label style="font-family:var(--mono);font-size:10px;color:var(--muted);display:block;">Step count</label>
+                  <input type="number" step="any" id="input-steps" placeholder="e.g. 9500" class="metric-input" />
+                  <div style="font-size:10px;color:var(--muted);margin-top:4px;">Current value for this date: <span id="current-steps" style="color:var(--text);">—</span></div>
+                </div>
+                <div style="display:flex;gap:8px;width:100%;">
+                  <button class="btn-primary" data-save="steps" style="flex:1;">Save</button>
+                  <button class="btn-primary outline" data-close="steps" style="flex:1;">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- Body Battery -->
         <div class="metric-card" data-metric="battery">
-          <div class="metric-header">
-            <div class="metric-label">BODY BATTERY</div>
-            <div class="metric-header-right">
-              <div class="metric-badge">STRESS · ENERGY</div>
-              <button class="log-btn" data-metric="battery">Log</button>
+          <div class="flipper">
+            <div class="front card-front">
+              <div class="metric-header">
+                <div class="metric-label">BODY BATTERY</div>
+                <div class="metric-header-right">
+                  <div class="metric-badge">STRESS · ENERGY</div>
+                </div>
+              </div>
+              <div class="metric-number">
+                <span class="metric-big" style="color:var(--purple);">62</span>
+                <span class="metric-unit">/ 100</span>
+              </div>
+              <div class="metric-change">
+                <span class="up">▲ +5%</span>
+                <span class="metric-change-label">Last entry</span>
+              </div>
+              <div class="chart-area"><canvas id="chart4" style="width:100%;height:100%;"></canvas></div>
+              <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+              <div class="chart-footer">
+                <div class="chart-footer-note"><span class="dot" style="background:var(--purple)"></span>RECHARGING WELL</div>
+                <div>LOW: 38 · PEAK: 91</div>
+              </div>
             </div>
-          </div>
-          <div class="metric-number">
-            <span class="metric-big" style="color:var(--purple);">62</span>
-            <span class="metric-unit">/ 100</span>
-          </div>
-          <div class="metric-change">
-            <span class="up">▲ +5%</span>
-            <span class="metric-change-label">This week</span>
-          </div>
-          <div class="chart-area"><canvas id="chart4" style="width:100%;height:100%;"></canvas></div>
-          <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
-          <div class="chart-footer">
-            <div class="chart-footer-note"><span class="dot" style="background:var(--purple)"></span>RECHARGING WELL</div>
-            <div>LOW: 38 · PEAK: 91</div>
+            <div class="back">
+              <div style="text-align:center;width:100%;">
+                <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:8px;">Log Body Battery for a specific date</p>
+                <div style="margin-bottom:8px;">
+                  <label style="font-family:var(--mono);font-size:10px;color:var(--muted);display:block;">Date</label>
+                  <input type="date" id="date-battery" class="metric-input" style="text-align:center;" />
+                </div>
+                <div style="margin-bottom:12px;">
+                  <label style="font-family:var(--mono);font-size:10px;color:var(--muted);display:block;">Level (0‑100)</label>
+                  <input type="number" step="any" id="input-battery" placeholder="e.g. 70" class="metric-input" />
+                  <div style="font-size:10px;color:var(--muted);margin-top:4px;">Current value for this date: <span id="current-battery" style="color:var(--text);">—</span></div>
+                </div>
+                <div style="display:flex;gap:8px;width:100%;">
+                  <button class="btn-primary" data-save="battery" style="flex:1;">Save</button>
+                  <button class="btn-primary outline" data-close="battery" style="flex:1;">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-      </div>
-    </div>
-  </div>
+      </div><!-- /metric-grid -->
+    </div><!-- /content -->
+  </div><!-- /main -->
 
   <!-- Toast -->
   <div id="toast" class="toast">

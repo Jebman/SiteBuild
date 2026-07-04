@@ -54,6 +54,7 @@
   padding: 0 8px;
 }
 
+/* ── Sidebar items ── */
 .sidebar-item {
   display: flex;
   align-items: center;
@@ -68,10 +69,16 @@
   text-decoration: none;
 }
 
-.sidebar-item:hover,
-.sidebar-item.active {
+/* Hover – subtle background, no color change */
+.sidebar-item:hover {
   background: var(--bg3);
-  color: var(--text);
+  color: var(--muted); /* keep muted on hover */
+}
+
+/* Active – orange text, transparent background */
+.sidebar-item.active {
+  background: transparent;
+  color: var(--orange); /* #e8621a */
 }
 
 .sidebar-item svg {
@@ -87,6 +94,12 @@
 .sidebar-child {
   padding-left: 28px;
   font-size: 11px;
+}
+
+/* Also apply active style to child items */
+.sidebar-child.active {
+  background: transparent;
+  color: var(--orange);
 }
 
 /* ── Expand/collapse arrow ── */
