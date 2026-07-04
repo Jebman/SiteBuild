@@ -1,3 +1,5 @@
+// ── dashboard.js — charts, metric data, and log button logic ──
+
 // ── Sparklines ──
 function sparkline(id, color, data) {
   const canvas = document.getElementById(id);
@@ -118,11 +120,49 @@ function metricChart(id, data, color) {
   ctx.stroke();
 }
 
+// ── Data definitions (exposed for log buttons) ──
 const hrvData   = [40,42,44,41,45,43,46,44,47,45,48,46,49,50,48,50,51,49,52,51,52];
 const sleepData = [78,82,80,85,83,81,84,86,82,80,79,83,85,82,84,81,83,85,82,84,84];
 const stepsData = [6200,7800,8100,6400,9200,8600,7200,10100,8400,7600,9800,8200,8900,7400,10200,8600,9100,8200,8800,8100,8432];
 const battData  = [55,58,52,60,56,48,62,58,54,60,57,52,64,60,56,62,58,55,62,60,62];
 
+// Expose metric data globally for log buttons
+window.__metricData = {
+  hrv: {
+    name: 'Heart Rate Variability',
+    currentValue: 52,
+    unit: 'MS',
+    trend: '+8%',
+    trendDirection: 'up',
+    data: hrvData,
+  },
+  sleep: {
+    name: 'Sleep Quality',
+    currentValue: 84,
+    unit: '/ 100',
+    trend: '-3%',
+    trendDirection: 'down',
+    data: sleepData,
+  },
+  steps: {
+    name: 'Daily Steps',
+    currentValue: '8.4k',
+    unit: 'STEPS',
+    trend: '+12%',
+    trendDirection: 'up',
+    data: stepsData,
+  },
+  battery: {
+    name: 'Body Battery',
+    currentValue: 62,
+    unit: '/ 100',
+    trend: '+5%',
+    trendDirection: 'up',
+    data: battData,
+  }
+};
+
+// ── Draw charts ──
 setTimeout(() => {
   metricChart('chart1', hrvData,   '#39d98a');
   metricChart('chart2', sleepData, '#4a9eff');
@@ -130,11 +170,80 @@ setTimeout(() => {
   metricChart('chart4', battData,  '#a78bfa');
 }, 100);
 
-// Throttled resize
+// ── Toast function ──
+function showToast(message, meta) {
+  const el = document.getElementById('toast');
+  const msgEl = document.getElementById('toastMessage');
+  const metaEl = document.getElementById('toastMeta');
+  if (!el || !msgEl || !metaEl) return;
+  msgEl.innerHTML = message;
+  metaEl.textContent = meta || '';
+  el.classList.add('visible');
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => el.classList.remove('visible'), 4000);
+}
+
+// ── Log button handlers ──
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.log-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const key = this.dataset.metric;
+      const info = window.__metricData[key];
+      if (!info) {
+        showToast('⚠️ No data for "' + key + '"', '');
+        return;
+      }
+
+      const data = info.data;
+      const avg = (data.reduce((a,b) => a + b, 0) / data.length).toFixed(1);
+      const min = Math.min.apply(null, data);
+      const max = Math.max.apply(null, data);
+      const trendSymbol = info.trendDirection === 'up' ? '▲' : '▼';
+      const currentDisplay = typeof info.currentValue === 'number' ? info.currentValue : info.currentValue;
+
+      const logEntry = {
+        metric: info.name,
+        current: currentDisplay + ' ' + info.unit,
+        trend: trendSymbol + ' ' + info.trend,
+        dataPoints: data.length,
+        range: min + ' – ' + max,
+        average: avg,
+        timestamp: new Date().toISOString(),
+        rawData: data.slice(0, 10) + (data.length > 10 ? ' …' : '')
+      };
+
+      console.group('📊 METRIC LOG: ' + info.name);
+      console.log('  Current:  %c' + logEntry.current, 'font-weight:bold;color:' + (info.trendDirection === 'up' ? '#39d98a' : '#f87171'));
+      console.log('  Trend:    %c' + logEntry.trend, 'color:' + (info.trendDirection === 'up' ? '#39d98a' : '#f87171'));
+      console.log('  Data pts: ' + logEntry.dataPoints);
+      console.log('  Range:    ' + logEntry.range);
+      console.log('  Average:  ' + logEntry.average);
+      console.log('  Sample:   [' + logEntry.rawData + ']');
+      console.log('  Timestamp:' + logEntry.timestamp);
+      console.groupEnd();
+
+      console.log('📋 Full metric data:', JSON.parse(JSON.stringify(logEntry)));
+
+      const shortName = info.name.replace(/^(Heart Rate Variability|Sleep Quality|Daily Steps|Body Battery)$/, function(m) {
+        return m === 'Heart Rate Variability' ? 'HRV' :
+               m === 'Sleep Quality' ? 'Sleep' :
+               m === 'Daily Steps' ? 'Steps' :
+               m === 'Body Battery' ? 'Battery' : m;
+      });
+      showToast(
+        '📊 <strong>' + shortName + '</strong> logged → ' + logEntry.current,
+        'Trend: ' + logEntry.trend + ' · Avg: ' + logEntry.average + ' · ' + logEntry.dataPoints + ' pts'
+      );
+    });
+  });
+});
+
+// ── Throttled resize ──
 let resizeTimer;
-window.addEventListener('resize', () => {
+window.addEventListener('resize', function() {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
+  resizeTimer = setTimeout(function() {
     metricChart('chart1', hrvData,   '#39d98a');
     metricChart('chart2', sleepData, '#4a9eff');
     metricChart('chart3', stepsData, '#e8621a');

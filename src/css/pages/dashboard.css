@@ -3,6 +3,22 @@
    Depends on: base.css, cards.css, sidebar.css
    ════════════════════════════════════════ */
 
+/* ── Color tokens (extended) ── */
+:root {
+  --green: #39d98a;
+  --blue:  #4a9eff;
+  --orange: #e8621a;
+  --purple: #a78bfa;
+  --red:   #f87171;
+}
+[data-theme="light"] {
+  --green: #2b9d6e;
+  --blue:  #3a7fcc;
+  --orange: #c45516;
+  --purple: #8b6fe0;
+  --red:   #d65a5a;
+}
+
 /* ── Layout shell ── */
 html, body {
   height: 100%;
@@ -47,7 +63,7 @@ body {
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .live-badge {
@@ -217,6 +233,37 @@ body {
   font-family: var(--mono);
 }
 
+.metric-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.log-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  line-height: 1.8;
+}
+
+.log-btn:hover {
+  color: var(--text);
+  border-color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .log-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
 .metric-number {
   display: flex;
   align-items: baseline;
@@ -303,8 +350,41 @@ body {
   border-radius: 3px;
   overflow: hidden;
 }
-
 .zone-seg {
   height: 6px;
   border-radius: 2px;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 18px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  transform: translateY(80px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 100;
+  max-width: 380px;
+}
+.toast.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.toast strong {
+  color: var(--accent);
+}
+.toast .toast-meta {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 4px;
 }

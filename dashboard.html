@@ -5,13 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Health Dashboard</title>
 
-  <!--
-    Load order:
-    1. base.css    — reset, design tokens, global styles
-    2. cards.css   — reusable card components (depends on base tokens)
-    3. sidebar.css — sidebar component (depends on base + dashboard tokens)
-    4. dashboard.css — page-specific overrides & dashboard-only tokens
-  -->
+  <!-- CSS -->
   <link rel="stylesheet" href="./src/css/components/base.css"/>
   <link rel="stylesheet" href="./src/css/components/cards.css"/>
   <link rel="stylesheet" href="./src/css/components/sidebar.css"/>
@@ -19,203 +13,208 @@
 </head>
 <body>
 
-<!-- ── Sidebar ── -->
-<aside id="sidebar" class="sidebar"></aside>
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar"></aside>
 
-<!-- ── Main ── -->
-<div class="main">
+  <!-- Main -->
+  <div class="main">
 
-  <header class="topbar">
-    <div class="dash-title">HEALTH DASHBOARD</div>
-    <div class="topbar-right">
-      <div class="live-badge"><span class="live-dot"></span>SYNCED</div>
-      <select class="time-select">
-        <option>7d</option>
-        <option>30d</option>
-        <option>90d</option>
-      </select>
+    <header class="topbar">
+      <div class="dash-title">HEALTH DASHBOARD</div>
+      <div class="topbar-right">
+        <div class="live-badge"><span class="live-dot"></span>SYNCED</div>
+        <select class="time-select">
+          <option>7d</option>
+          <option>30d</option>
+          <option>90d</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Signal bar (same as before) -->
+      <div class="signal-bar">
+        <div class="signal-card">
+          <div class="signal-label">READINESS SCORE</div>
+          <canvas class="signal-radar" id="radar" width="60" height="60"></canvas>
+          <div class="signal-big">78</div>
+          <div class="signal-sub">● 8 HEALTH SOURCES</div>
+        </div>
+        <div class="signal-card">
+          <div><span class="signal-num">1</span></div>
+          <div class="signal-label">SLEEP</div>
+          <div class="signal-sub-label">Last night</div>
+          <div class="signal-stat"><span class="signal-stat-label">TOTAL</span><span class="signal-stat-val">7h 18m</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">DEEP</span><span class="signal-stat-val">1h 24m</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">QUALITY</span><span class="signal-stat-val">84 / 100</span></div>
+          <canvas class="signal-sparkline" id="sp1" width="120" height="30"></canvas>
+        </div>
+        <div class="signal-card">
+          <div><span class="signal-num">2</span></div>
+          <div class="signal-label">RECOVERY</div>
+          <div class="signal-sub-label">Morning read</div>
+          <div class="signal-stat"><span class="signal-stat-label">HRV</span><span class="signal-stat-val">52 ms</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">RESTING HR</span><span class="signal-stat-val">56 bpm</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">RECOVERY %</span><span class="signal-stat-val">73%</span></div>
+          <canvas class="signal-sparkline" id="sp2" width="120" height="30"></canvas>
+        </div>
+        <div class="signal-card">
+          <div><span class="signal-num">3</span></div>
+          <div class="signal-label">ACTIVITY</div>
+          <div class="signal-sub-label">Today</div>
+          <div class="signal-stat"><span class="signal-stat-label">STEPS</span><span class="signal-stat-val">8,432</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">ACTIVE CAL</span><span class="signal-stat-val">420 kcal</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">VO2 MAX</span><span class="signal-stat-val">48.2</span></div>
+          <canvas class="signal-sparkline" id="sp3" width="120" height="30"></canvas>
+        </div>
+        <div class="signal-card">
+          <div><span class="signal-num">4</span></div>
+          <div class="signal-label">NUTRITION</div>
+          <div class="signal-sub-label">Today</div>
+          <div class="signal-stat"><span class="signal-stat-label">CALORIES</span><span class="signal-stat-val">2,140</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">PROTEIN</span><span class="signal-stat-val">142 g</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">HYDRATION</span><span class="signal-stat-val">2.1 L</span></div>
+          <canvas class="signal-sparkline" id="sp4" width="120" height="30"></canvas>
+        </div>
+        <div class="signal-card">
+          <div><span class="signal-num">5</span></div>
+          <div class="signal-label">STRESS</div>
+          <div class="signal-sub-label">Avg today</div>
+          <div class="signal-stat"><span class="signal-stat-label">STRESS SCORE</span><span class="signal-stat-val">28</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">BODY BATTERY</span><span class="signal-stat-val">62</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">LEVEL</span><span class="signal-stat-val" style="color:var(--green)">LOW</span></div>
+          <canvas class="signal-sparkline" id="sp5" width="120" height="30"></canvas>
+        </div>
+        <div class="signal-card">
+          <div><span class="signal-num">6</span></div>
+          <div class="signal-label">CARDIOVASCULAR</div>
+          <div class="signal-sub-label">7-day avg</div>
+          <div class="signal-stat"><span class="signal-stat-label">RESTING HR</span><span class="signal-stat-val">56 bpm</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">MAX HR</span><span class="signal-stat-val">162 bpm</span></div>
+          <div class="signal-stat"><span class="signal-stat-label">ZONE 2</span><span class="signal-stat-val">42 min</span></div>
+          <canvas class="signal-sparkline" id="sp6" width="120" height="30"></canvas>
+        </div>
+        <div class="signal-card">
+          <div class="signal-label">OVERALL HEALTH</div>
+          <canvas class="signal-radar" id="radar2" width="60" height="60"></canvas>
+          <div class="signal-big" style="color:var(--green);">82</div>
+          <div class="signal-sub">↑ 14-DAY STREAK</div>
+        </div>
+      </div>
+
+      <!-- Metric cards with log buttons -->
+      <div class="metric-grid">
+
+        <div class="metric-card" data-metric="hrv">
+          <div class="metric-header">
+            <div class="metric-label">HEART RATE VARIABILITY</div>
+            <div class="metric-header-right">
+              <div class="metric-badge">RECOVERY</div>
+              <button class="log-btn" data-metric="hrv">Log</button>
+            </div>
+          </div>
+          <div class="metric-number">
+            <span class="metric-big" style="color:var(--green);">52</span>
+            <span class="metric-unit">MS</span>
+          </div>
+          <div class="metric-change">
+            <span class="up">▲ +8%</span>
+            <span class="metric-change-label">This week</span>
+          </div>
+          <div class="chart-area"><canvas id="chart1" style="width:100%;height:100%;"></canvas></div>
+          <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+          <div class="chart-footer">
+            <div class="chart-footer-note"><span class="dot" style="background:var(--green)"></span>HRV TRENDING UP</div>
+            <div>7D AVG: 49 MS</div>
+          </div>
+        </div>
+
+        <div class="metric-card" data-metric="sleep">
+          <div class="metric-header">
+            <div class="metric-label">SLEEP QUALITY</div>
+            <div class="metric-header-right">
+              <div class="metric-badge">NIGHTLY SCORE</div>
+              <button class="log-btn" data-metric="sleep">Log</button>
+            </div>
+          </div>
+          <div class="metric-number">
+            <span class="metric-big" style="color:var(--blue);">84</span>
+            <span class="metric-unit">/ 100</span>
+          </div>
+          <div class="metric-change">
+            <span class="down">▼ -3%</span>
+            <span class="metric-change-label">This week</span>
+          </div>
+          <div class="chart-area"><canvas id="chart2" style="width:100%;height:100%;"></canvas></div>
+          <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+          <div class="chart-footer">
+            <div class="chart-footer-note"><span class="dot" style="background:var(--blue)"></span>SLIGHT DIP LAST 3 NIGHTS</div>
+            <div>7D AVG: 82</div>
+          </div>
+        </div>
+
+        <div class="metric-card" data-metric="steps">
+          <div class="metric-header">
+            <div class="metric-label">DAILY STEPS</div>
+            <div class="metric-header-right">
+              <div class="metric-badge">ACTIVITY</div>
+              <button class="log-btn" data-metric="steps">Log</button>
+            </div>
+          </div>
+          <div class="metric-number">
+            <span class="metric-big" style="color:var(--orange);">8.4k</span>
+            <span class="metric-unit">STEPS</span>
+          </div>
+          <div class="metric-change">
+            <span class="up">▲ +12%</span>
+            <span class="metric-change-label">This week</span>
+          </div>
+          <div class="chart-area"><canvas id="chart3" style="width:100%;height:100%;"></canvas></div>
+          <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+          <div class="chart-footer">
+            <div class="chart-footer-note"><span class="dot" style="background:var(--orange)"></span>ABOVE WEEKLY GOAL</div>
+            <div>GOAL: 10K / DAY</div>
+          </div>
+        </div>
+
+        <div class="metric-card" data-metric="battery">
+          <div class="metric-header">
+            <div class="metric-label">BODY BATTERY</div>
+            <div class="metric-header-right">
+              <div class="metric-badge">STRESS · ENERGY</div>
+              <button class="log-btn" data-metric="battery">Log</button>
+            </div>
+          </div>
+          <div class="metric-number">
+            <span class="metric-big" style="color:var(--purple);">62</span>
+            <span class="metric-unit">/ 100</span>
+          </div>
+          <div class="metric-change">
+            <span class="up">▲ +5%</span>
+            <span class="metric-change-label">This week</span>
+          </div>
+          <div class="chart-area"><canvas id="chart4" style="width:100%;height:100%;"></canvas></div>
+          <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
+          <div class="chart-footer">
+            <div class="chart-footer-note"><span class="dot" style="background:var(--purple)"></span>RECHARGING WELL</div>
+            <div>LOW: 38 · PEAK: 91</div>
+          </div>
+        </div>
+
+      </div>
     </div>
-  </header>
+  </div>
 
-  <div class="content">
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <div id="toastMessage">📊 <strong>HRV</strong> logged → 52 MS</div>
+    <div class="toast-meta" id="toastMeta">7D avg: 49 · 21 data points</div>
+  </div>
 
-    <!-- Health pipeline bar -->
-    <div class="signal-bar">
-
-      <div class="signal-card">
-        <div class="signal-label">READINESS SCORE</div>
-        <canvas class="signal-radar" id="radar" width="60" height="60"></canvas>
-        <div class="signal-big">78</div>
-        <div class="signal-sub">● 8 HEALTH SOURCES</div>
-      </div>
-
-      <div class="signal-card">
-        <div><span class="signal-num">1</span></div>
-        <div class="signal-label">SLEEP</div>
-        <div class="signal-sub-label">Last night</div>
-        <div class="signal-stat"><span class="signal-stat-label">TOTAL</span><span class="signal-stat-val">7h 18m</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">DEEP</span><span class="signal-stat-val">1h 24m</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">QUALITY</span><span class="signal-stat-val">84 / 100</span></div>
-        <canvas class="signal-sparkline" id="sp1" width="120" height="30"></canvas>
-      </div>
-
-      <div class="signal-card">
-        <div><span class="signal-num">2</span></div>
-        <div class="signal-label">RECOVERY</div>
-        <div class="signal-sub-label">Morning read</div>
-        <div class="signal-stat"><span class="signal-stat-label">HRV</span><span class="signal-stat-val">52 ms</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">RESTING HR</span><span class="signal-stat-val">56 bpm</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">RECOVERY %</span><span class="signal-stat-val">73%</span></div>
-        <canvas class="signal-sparkline" id="sp2" width="120" height="30"></canvas>
-      </div>
-
-      <div class="signal-card">
-        <div><span class="signal-num">3</span></div>
-        <div class="signal-label">ACTIVITY</div>
-        <div class="signal-sub-label">Today</div>
-        <div class="signal-stat"><span class="signal-stat-label">STEPS</span><span class="signal-stat-val">8,432</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">ACTIVE CAL</span><span class="signal-stat-val">420 kcal</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">VO2 MAX</span><span class="signal-stat-val">48.2</span></div>
-        <canvas class="signal-sparkline" id="sp3" width="120" height="30"></canvas>
-      </div>
-
-      <div class="signal-card">
-        <div><span class="signal-num">4</span></div>
-        <div class="signal-label">NUTRITION</div>
-        <div class="signal-sub-label">Today</div>
-        <div class="signal-stat"><span class="signal-stat-label">CALORIES</span><span class="signal-stat-val">2,140</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">PROTEIN</span><span class="signal-stat-val">142 g</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">HYDRATION</span><span class="signal-stat-val">2.1 L</span></div>
-        <canvas class="signal-sparkline" id="sp4" width="120" height="30"></canvas>
-      </div>
-
-      <div class="signal-card">
-        <div><span class="signal-num">5</span></div>
-        <div class="signal-label">STRESS</div>
-        <div class="signal-sub-label">Avg today</div>
-        <div class="signal-stat"><span class="signal-stat-label">STRESS SCORE</span><span class="signal-stat-val">28</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">BODY BATTERY</span><span class="signal-stat-val">62</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">LEVEL</span><span class="signal-stat-val" style="color:var(--green)">LOW</span></div>
-        <canvas class="signal-sparkline" id="sp5" width="120" height="30"></canvas>
-      </div>
-
-      <div class="signal-card">
-        <div><span class="signal-num">6</span></div>
-        <div class="signal-label">CARDIOVASCULAR</div>
-        <div class="signal-sub-label">7-day avg</div>
-        <div class="signal-stat"><span class="signal-stat-label">RESTING HR</span><span class="signal-stat-val">56 bpm</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">MAX HR</span><span class="signal-stat-val">162 bpm</span></div>
-        <div class="signal-stat"><span class="signal-stat-label">ZONE 2</span><span class="signal-stat-val">42 min</span></div>
-        <canvas class="signal-sparkline" id="sp6" width="120" height="30"></canvas>
-      </div>
-
-      <div class="signal-card">
-        <div class="signal-label">OVERALL HEALTH</div>
-        <canvas class="signal-radar" id="radar2" width="60" height="60"></canvas>
-        <div class="signal-big" style="color:var(--green);">82</div>
-        <div class="signal-sub">↑ 14-DAY STREAK</div>
-      </div>
-
-    </div><!-- /signal-bar -->
-
-    <!-- Metric cards -->
-    <div class="metric-grid">
-
-      <div class="metric-card">
-        <div class="metric-header">
-          <div class="metric-label">HEART RATE VARIABILITY</div>
-          <div class="metric-badge">RECOVERY</div>
-        </div>
-        <div class="metric-number">
-          <span class="metric-big" style="color:var(--green);">52</span>
-          <span class="metric-unit">MS</span>
-        </div>
-        <div class="metric-change">
-          <span class="up">▲ +8%</span>
-          <span class="metric-change-label">This week</span>
-        </div>
-        <div class="chart-area"><canvas id="chart1" style="width:100%;height:100%;"></canvas></div>
-        <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
-        <div class="chart-footer">
-          <div class="chart-footer-note"><span class="dot" style="background:var(--green)"></span>HRV TRENDING UP</div>
-          <div>7D AVG: 49 MS</div>
-        </div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-header">
-          <div class="metric-label">SLEEP QUALITY</div>
-          <div class="metric-badge">NIGHTLY SCORE</div>
-        </div>
-        <div class="metric-number">
-          <span class="metric-big" style="color:var(--blue);">84</span>
-          <span class="metric-unit">/ 100</span>
-        </div>
-        <div class="metric-change">
-          <span class="down">▼ -3%</span>
-          <span class="metric-change-label">This week</span>
-        </div>
-        <div class="chart-area"><canvas id="chart2" style="width:100%;height:100%;"></canvas></div>
-        <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
-        <div class="chart-footer">
-          <div class="chart-footer-note"><span class="dot" style="background:var(--blue)"></span>SLIGHT DIP LAST 3 NIGHTS</div>
-          <div>7D AVG: 82</div>
-        </div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-header">
-          <div class="metric-label">DAILY STEPS</div>
-          <div class="metric-badge">ACTIVITY</div>
-        </div>
-        <div class="metric-number">
-          <span class="metric-big" style="color:var(--orange);">8.4k</span>
-          <span class="metric-unit">STEPS</span>
-        </div>
-        <div class="metric-change">
-          <span class="up">▲ +12%</span>
-          <span class="metric-change-label">This week</span>
-        </div>
-        <div class="chart-area"><canvas id="chart3" style="width:100%;height:100%;"></canvas></div>
-        <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
-        <div class="chart-footer">
-          <div class="chart-footer-note"><span class="dot" style="background:var(--orange)"></span>ABOVE WEEKLY GOAL</div>
-          <div>GOAL: 10K / DAY</div>
-        </div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-header">
-          <div class="metric-label">BODY BATTERY</div>
-          <div class="metric-badge">STRESS · ENERGY</div>
-        </div>
-        <div class="metric-number">
-          <span class="metric-big" style="color:var(--purple);">62</span>
-          <span class="metric-unit">/ 100</span>
-        </div>
-        <div class="metric-change">
-          <span class="up">▲ +5%</span>
-          <span class="metric-change-label">This week</span>
-        </div>
-        <div class="chart-area"><canvas id="chart4" style="width:100%;height:100%;"></canvas></div>
-        <div class="time-labels"><span>T-60</span><span>T-30</span><span>NOW</span></div>
-        <div class="chart-footer">
-          <div class="chart-footer-note"><span class="dot" style="background:var(--purple)"></span>RECHARGING WELL</div>
-          <div>LOW: 38 · PEAK: 91</div>
-        </div>
-      </div>
-
-    </div><!-- /metric-grid -->
-  </div><!-- /content -->
-</div><!-- /main -->
-
-<!--
-  store.js uses defer so a 404 won't throw a blocking error before
-  dashboard.js runs. dashboard.js and sidebar.js also deferred for
-  the same reason and to ensure DOM is ready.
--->
-<script src="./src/js/store.js" defer></script>
-<script src="./src/js/pages/dashboard.js" defer></script>
-<script src="./src/js/components/sidebar.js" defer></script>
+  <!-- JavaScript (deferred) -->
+  <script src="./src/js/store.js" defer></script>
+  <script src="./src/js/components/sidebar.js" defer></script>
+  <script src="./src/js/pages/dashboard.js" defer></script>
 </body>
 </html>

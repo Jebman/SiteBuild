@@ -1,4 +1,4 @@
-// sidebar.js
+// sidebar.js — renders sidebar and handles expand/collapse + navigation
 
 const NAV = [
   { label: 'Dashboard', href: 'index.html', icon: 'grid' },
@@ -24,31 +24,28 @@ const ICONS = {
 };
 
 function renderSidebar(nav, currentPath) {
-  const currentFile = currentPath.split('/').pop() || 'index.html'; // get filename only
+  const currentFile = currentPath.split('/').pop() || 'index.html';
 
   const items = nav.map(function(item) {
     if (item.divider) {
       return '<div style="height:1px;background:var(--border);margin:8px 16px;"></div>';
     }
 
-    // Check if this item or any of its children match the current page
     const selfActive    = currentFile === item.href;
-    const childActive   = item.children && item.children.some(function(c) {
-      return currentFile === c.href;
-    });
+    const childActive   = item.children && item.children.some(c => currentFile === c.href);
     const isActive      = selfActive || childActive;
-    const isOpen        = childActive; // expand automatically if a child is active
+    const isOpen        = childActive; // expand if a child is active
 
     if (item.children) {
       const childItems = item.children.map(function(child) {
         const childIsActive = currentFile === child.href ? ' active' : '';
-        return '<a class="sidebar-item sidebar-child' + childIsActive + '" href="' + child.href + '">' +
+        return '<a class="sidebar-item sidebar-child' + childIsActive + '" href="' + child.href + '" data-nav="true">' +
                  (ICONS[child.icon] || '') +
                  child.label +
                '</a>';
       }).join('');
 
-      return '<a class="sidebar-item' + (isActive ? ' active' : '') + '" href="' + item.href + '" onclick="toggleSection(this, event)">' +
+      return '<a class="sidebar-item' + (isActive ? ' active' : '') + '" href="' + item.href + '" data-toggle="true">' +
                (ICONS[item.icon] || '') +
                item.label +
                '<span class="sidebar-arrow' + (isOpen ? ' open' : '') + '">›</span>' +
@@ -58,7 +55,7 @@ function renderSidebar(nav, currentPath) {
              '</div>';
     }
 
-    return '<a class="sidebar-item' + (isActive ? ' active' : '') + '" href="' + item.href + '">' +
+    return '<a class="sidebar-item' + (isActive ? ' active' : '') + '" href="' + item.href + '" data-nav="true">' +
              (ICONS[item.icon] || '') +
              item.label +
            '</a>';
@@ -71,28 +68,45 @@ function renderSidebar(nav, currentPath) {
          '<nav class="sidebar-nav">' + items + '</nav>';
 }
 
-function toggleSection(el, e) {
-  e.preventDefault();
-  var children = el.nextElementSibling;
-  var arrow    = el.querySelector('.sidebar-arrow');
-  children.classList.toggle('open');
-  arrow.classList.toggle('open');
-}
-
+// ── Setup sidebar with event delegation ──
 document.addEventListener('DOMContentLoaded', function() {
-  var aside = document.getElementById('sidebar');
+  const aside = document.getElementById('sidebar');
   if (!aside) return;
   aside.innerHTML = renderSidebar(NAV, window.location.pathname);
 
-  document.querySelectorAll('.sidebar-item').forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      var href = link.getAttribute('href');
-      if (!href || href === '#') return;
-      if (link.nextElementSibling && link.nextElementSibling.classList.contains('sidebar-children')) return;
+  // Delegate click events on the sidebar-nav
+  const nav = aside.querySelector('.sidebar-nav');
+  if (!nav) return;
+
+  nav.addEventListener('click', function(e) {
+    const target = e.target.closest('a');
+    if (!target) return;
+
+    // Toggle parent (has data-toggle)
+    if (target.dataset.toggle === 'true') {
+      e.preventDefault();
+      const children = target.nextElementSibling;
+      const arrow    = target.querySelector('.sidebar-arrow');
+      if (children && children.classList.contains('sidebar-children')) {
+        children.classList.toggle('open');
+        if (arrow) arrow.classList.toggle('open');
+      }
+      return;
+    }
+
+    // Navigation link (data-nav)
+    if (target.dataset.nav === 'true') {
+      const href = target.getAttribute('href');
+      if (!href || href === '#') {
+        e.preventDefault();
+        return;
+      }
+      // Allow normal navigation – no need to prevent default
+      // but we want a smooth transition
       e.preventDefault();
       document.body.style.transition = 'opacity 0.15s';
       document.body.style.opacity = '0';
       setTimeout(function() { window.location.href = href; }, 150);
-    });
+    }
   });
 });
